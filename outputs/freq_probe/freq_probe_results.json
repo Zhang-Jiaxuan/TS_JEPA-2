@@ -1,0 +1,101 @@
+{
+  "step1_probe_results": [
+    {
+      "label": "dominant_freq",
+      "R2": 0.11320251226425171,
+      "MSE": 3.3550491934875026e-05,
+      "baseline_R2": -0.00015342235565185547,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "spectral_entropy",
+      "R2": 0.7992276549339294,
+      "MSE": 0.02280556410551071,
+      "baseline_R2": -0.0009185075759887695,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "mean_freq",
+      "R2": 0.5716394186019897,
+      "MSE": 1.8201739294454455e-05,
+      "baseline_R2": -0.0008175373077392578,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "top1_power",
+      "R2": 0.848236083984375,
+      "MSE": 0.0010424989741295576,
+      "baseline_R2": -0.0005342960357666016,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "top2_power",
+      "R2": 0.8050997853279114,
+      "MSE": 0.0002808687568176538,
+      "baseline_R2": -0.00025856494903564453,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "top3_power",
+      "R2": 0.6711708903312683,
+      "MSE": 8.981756400316954e-05,
+      "baseline_R2": -0.0008827447891235352,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "top4_power",
+      "R2": 0.5763447284698486,
+      "MSE": 2.3470231099054217e-05,
+      "baseline_R2": -0.0007294416427612305,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "top5_power",
+      "R2": 0.5743895769119263,
+      "MSE": 9.593591130396817e-06,
+      "baseline_R2": -0.0005193948745727539,
+      "n_train": 41989,
+      "n_test": 10498
+    }
+  ],
+  "step2_forecast_results": {
+    "tsjepa_latent": {
+      "label": "TSJEPA_latent",
+      "R2": 0.9851705431938171,
+      "MSE": 0.0020480353850871325,
+      "baseline_R2": -2.562999725341797e-05,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    "handcrafted_freq": {
+      "label": "HandcraftedFreqFeats",
+      "R2": 0.17768043279647827,
+      "MSE": 0.11356711387634277,
+      "baseline_R2": -2.562999725341797e-05,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    "time_domain_stats": {
+      "label": "TimeDomainStats",
+      "R2": 0.9298468828201294,
+      "MSE": 0.00968855433166027,
+      "baseline_R2": -2.562999725341797e-05,
+      "n_train": 41989,
+      "n_test": 10498
+    }
+  },
+  "summary": {
+    "avg_freq_R2_step1": 0.6199138313531876,
+    "freq_info_lost": true,
+    "forecast_gap_freq_jepa": -0.8074901103973389,
+    "forecast_gap_jepa_time": 0.055323660373687744,
+    "research_question_valid": false
+  }
+}

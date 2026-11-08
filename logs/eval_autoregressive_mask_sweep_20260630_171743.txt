@@ -1,0 +1,49 @@
+============================================================
+  TS-JEPA eval_autoregressive mask_ratio 扫描实验
+  开始时间: 2026-06-30 17:17:43
+============================================================
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.1
+  时间: 2026-06-30 17:17:43
+------------------------------------------------------------
+Load data
+Model loaded
+start train
+Epoch: 0 - Total loss: 16.247488021850586
+Epoch: 10 - Total loss: 1.6294395923614502
+Epoch: 20 - Total loss: 1.6261318922042847
+Epoch: 30 - Total loss: 1.622293472290039
+Epoch: 40 - Total loss: 1.6184165477752686
+Traceback (most recent call last):
+  File "/data_p6/zjx/TS_JEPA/eval_autoregressive.py", line 186, in <module>
+    plt.savefig(f"autoregressive_step_error_{mask_ratio}.png", dpi=150)
+NameError: name 'mask_ratio' is not defined
+  [✗ 失败] mask_ratio = 0.1 | 退出码: 1
+  → 跳过当前 mask_ratio，继续下一个...
+  结束时间: 2026-06-30 17:18:06
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.2
+  时间: 2026-06-30 17:18:06
+------------------------------------------------------------
+Load data
+Model loaded
+start train
+Epoch: 0 - Total loss: 19.011634826660156
+Epoch: 10 - Total loss: 1.625171422958374
+Epoch: 20 - Total loss: 1.6220518350601196
+Epoch: 30 - Total loss: 1.6184049844741821
+Epoch: 40 - Total loss: 1.6146650314331055
+Traceback (most recent call last):
+  File "/data_p6/zjx/TS_JEPA/eval_autoregressive.py", line 186, in <module>
+    plt.savefig(f"autoregressive_step_error_{mask_ratio}.png", dpi=150)
+NameError: name 'mask_ratio' is not defined
+  [✗ 失败] mask_ratio = 0.2 | 退出码: 1
+  → 跳过当前 mask_ratio，继续下一个...
+  结束时间: 2026-06-30 17:18:28
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.3
+  时间: 2026-06-30 17:18:28
+------------------------------------------------------------

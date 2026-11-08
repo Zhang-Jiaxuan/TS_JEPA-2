@@ -1,0 +1,437 @@
+============================================================
+  TS-JEPA eval_autoregressive mask_ratio 扫描实验
+  开始时间: 2026-06-30 17:20:55
+============================================================
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.1
+  时间: 2026-06-30 17:20:55
+------------------------------------------------------------
+Load data
+Model loaded
+start train
+Epoch: 0 - Total loss: 14.751090049743652
+Epoch: 10 - Total loss: 1.632735252380371
+Epoch: 20 - Total loss: 1.6289321184158325
+Epoch: 30 - Total loss: 1.624680519104004
+Epoch: 40 - Total loss: 1.6205041408538818
+Epoch: 50 - Total loss: 1.6165318489074707
+Epoch: 60 - Total loss: 1.6127992868423462
+Epoch: 70 - Total loss: 1.6093294620513916
+Epoch: 80 - Total loss: 1.6061151027679443
+Epoch: 90 - Total loss: 1.6031060218811035
+Epoch: 100 - Total loss: 1.6002436876296997
+Epoch: 110 - Total loss: 1.5974925756454468
+Epoch: 120 - Total loss: 1.5948445796966553
+Epoch: 130 - Total loss: 1.5923048257827759
+Epoch: 140 - Total loss: 1.5898818969726562
+Epoch: 150 - Total loss: 1.587581753730774
+Epoch: 160 - Total loss: 1.5854028463363647
+Epoch: 170 - Total loss: 1.583338975906372
+Epoch: 180 - Total loss: 1.581380844116211
+Epoch: 190 - Total loss: 1.5795210599899292
+Epoch: 200 - Total loss: 1.5777524709701538
+Epoch: 210 - Total loss: 1.5760695934295654
+Epoch: 220 - Total loss: 1.574466347694397
+Epoch: 230 - Total loss: 1.5729379653930664
+Epoch: 240 - Total loss: 1.5714799165725708
+Epoch: 250 - Total loss: 1.5700867176055908
+Epoch: 260 - Total loss: 1.568755030632019
+Epoch: 270 - Total loss: 1.5674805641174316
+Epoch: 280 - Total loss: 1.5662590265274048
+Epoch: 290 - Total loss: 1.565087080001831
+Epoch: 300 - Total loss: 1.5639612674713135
+Epoch: 310 - Total loss: 1.5628784894943237
+Epoch: 320 - Total loss: 1.5618350505828857
+Epoch: 330 - Total loss: 1.560828685760498
+Epoch: 340 - Total loss: 1.559856653213501
+Epoch: 350 - Total loss: 1.55891752243042
+Epoch: 360 - Total loss: 1.5580074787139893
+Epoch: 370 - Total loss: 1.5571260452270508
+Epoch: 380 - Total loss: 1.5562710762023926
+Epoch: 390 - Total loss: 1.555439829826355
+Epoch: 400 - Total loss: 1.5546317100524902
+Epoch: 410 - Total loss: 1.5538451671600342
+Epoch: 420 - Total loss: 1.5530791282653809
+Epoch: 430 - Total loss: 1.552331805229187
+Epoch: 440 - Total loss: 1.551601767539978
+Epoch: 450 - Total loss: 1.5508887767791748
+Epoch: 460 - Total loss: 1.5501915216445923
+Epoch: 470 - Total loss: 1.5495092868804932
+Epoch: 480 - Total loss: 1.5488412380218506
+Epoch: 490 - Total loss: 1.5481868982315063
+loss is: 18.130329132080078
+  [✓ 完成] mask_ratio = 0.1 | 退出码: 0
+  结束时间: 2026-06-30 17:24:06
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.2
+  时间: 2026-06-30 17:24:06
+------------------------------------------------------------
+Load data
+Model loaded
+start train
+Epoch: 0 - Total loss: 22.081010818481445
+Epoch: 10 - Total loss: 1.6251380443572998
+Epoch: 20 - Total loss: 1.6204006671905518
+Epoch: 30 - Total loss: 1.6157941818237305
+Epoch: 40 - Total loss: 1.611599326133728
+Epoch: 50 - Total loss: 1.6078327894210815
+Epoch: 60 - Total loss: 1.6044375896453857
+Epoch: 70 - Total loss: 1.60134756565094
+Epoch: 80 - Total loss: 1.5985130071640015
+Epoch: 90 - Total loss: 1.5959053039550781
+Epoch: 100 - Total loss: 1.5934956073760986
+Epoch: 110 - Total loss: 1.5912423133850098
+Epoch: 120 - Total loss: 1.5890955924987793
+Epoch: 130 - Total loss: 1.5870212316513062
+Epoch: 140 - Total loss: 1.5850152969360352
+Epoch: 150 - Total loss: 1.5830830335617065
+Epoch: 160 - Total loss: 1.581225872039795
+Epoch: 170 - Total loss: 1.5794456005096436
+Epoch: 180 - Total loss: 1.5777461528778076
+Epoch: 190 - Total loss: 1.5761269330978394
+Epoch: 200 - Total loss: 1.574584722518921
+Epoch: 210 - Total loss: 1.573111653327942
+Epoch: 220 - Total loss: 1.571701169013977
+Epoch: 230 - Total loss: 1.570346474647522
+Epoch: 240 - Total loss: 1.5690443515777588
+Epoch: 250 - Total loss: 1.5677889585494995
+Epoch: 260 - Total loss: 1.5665782690048218
+Epoch: 270 - Total loss: 1.5654085874557495
+Epoch: 280 - Total loss: 1.5642768144607544
+Epoch: 290 - Total loss: 1.5631815195083618
+Epoch: 300 - Total loss: 1.562118649482727
+Epoch: 310 - Total loss: 1.5610874891281128
+Epoch: 320 - Total loss: 1.5600852966308594
+Epoch: 330 - Total loss: 1.5591102838516235
+Epoch: 340 - Total loss: 1.5581601858139038
+Epoch: 350 - Total loss: 1.5572341680526733
+Epoch: 360 - Total loss: 1.5563302040100098
+Epoch: 370 - Total loss: 1.5554472208023071
+Epoch: 380 - Total loss: 1.5545836687088013
+Epoch: 390 - Total loss: 1.5537384748458862
+Epoch: 400 - Total loss: 1.5529104471206665
+Epoch: 410 - Total loss: 1.5520983934402466
+Epoch: 420 - Total loss: 1.5513014793395996
+Epoch: 430 - Total loss: 1.550519347190857
+Epoch: 440 - Total loss: 1.549750566482544
+Epoch: 450 - Total loss: 1.548994779586792
+Epoch: 460 - Total loss: 1.5482515096664429
+Epoch: 470 - Total loss: 1.547519326210022
+Epoch: 480 - Total loss: 1.5467982292175293
+Epoch: 490 - Total loss: 1.5460877418518066
+loss is: 23.1386775970459
+  [✓ 完成] mask_ratio = 0.2 | 退出码: 0
+  结束时间: 2026-06-30 17:27:17
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.3
+  时间: 2026-06-30 17:27:17
+------------------------------------------------------------
+Load data
+Model loaded
+start train
+Epoch: 0 - Total loss: 25.516637802124023
+Epoch: 10 - Total loss: 1.6285768747329712
+Epoch: 20 - Total loss: 1.622493863105774
+Epoch: 30 - Total loss: 1.6172268390655518
+Epoch: 40 - Total loss: 1.6125379800796509
+Epoch: 50 - Total loss: 1.6084394454956055
+Epoch: 60 - Total loss: 1.6048482656478882
+Epoch: 70 - Total loss: 1.6016597747802734
+Epoch: 80 - Total loss: 1.59877347946167
+Epoch: 90 - Total loss: 1.5960936546325684
+Epoch: 100 - Total loss: 1.5935473442077637
+Epoch: 110 - Total loss: 1.5911067724227905
+Epoch: 120 - Total loss: 1.5887782573699951
+Epoch: 130 - Total loss: 1.5865721702575684
+Epoch: 140 - Total loss: 1.5844906568527222
+Epoch: 150 - Total loss: 1.5825272798538208
+Epoch: 160 - Total loss: 1.5806732177734375
+Epoch: 170 - Total loss: 1.5789213180541992
+Epoch: 180 - Total loss: 1.577263355255127
+Epoch: 190 - Total loss: 1.575695276260376
+Epoch: 200 - Total loss: 1.5742119550704956
+Epoch: 210 - Total loss: 1.5728092193603516
+Epoch: 220 - Total loss: 1.5714813470840454
+Epoch: 230 - Total loss: 1.5702229738235474
+Epoch: 240 - Total loss: 1.5690298080444336
+Epoch: 250 - Total loss: 1.5678963661193848
+Epoch: 260 - Total loss: 1.5668184757232666
+Epoch: 270 - Total loss: 1.5657916069030762
+Epoch: 280 - Total loss: 1.5648117065429688
+Epoch: 290 - Total loss: 1.5638747215270996
+Epoch: 300 - Total loss: 1.5629775524139404
+Epoch: 310 - Total loss: 1.5621166229248047
+Epoch: 320 - Total loss: 1.5612891912460327
+Epoch: 330 - Total loss: 1.560492753982544
+Epoch: 340 - Total loss: 1.5597244501113892
+Epoch: 350 - Total loss: 1.558982253074646
+Epoch: 360 - Total loss: 1.5582646131515503
+Epoch: 370 - Total loss: 1.5575686693191528
+Epoch: 380 - Total loss: 1.5568935871124268
+Epoch: 390 - Total loss: 1.5562372207641602
+Epoch: 400 - Total loss: 1.5555992126464844
+Epoch: 410 - Total loss: 1.554977297782898
+Epoch: 420 - Total loss: 1.5543701648712158
+Epoch: 430 - Total loss: 1.5537776947021484
+Epoch: 440 - Total loss: 1.553197979927063
+Epoch: 450 - Total loss: 1.55263090133667
+Epoch: 460 - Total loss: 1.5520750284194946
+Epoch: 470 - Total loss: 1.551530122756958
+Epoch: 480 - Total loss: 1.5509949922561646
+Epoch: 490 - Total loss: 1.5504692792892456
+loss is: 19.07938575744629
+  [✓ 完成] mask_ratio = 0.3 | 退出码: 0
+  结束时间: 2026-06-30 17:30:18
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.5
+  时间: 2026-06-30 17:30:18
+------------------------------------------------------------
+Load data
+Model loaded
+start train
+Epoch: 0 - Total loss: 14.49947738647461
+Epoch: 10 - Total loss: 1.6186065673828125
+Epoch: 20 - Total loss: 1.6155186891555786
+Epoch: 30 - Total loss: 1.6124330759048462
+Epoch: 40 - Total loss: 1.6096230745315552
+Epoch: 50 - Total loss: 1.6070809364318848
+Epoch: 60 - Total loss: 1.6047325134277344
+Epoch: 70 - Total loss: 1.6025172472000122
+Epoch: 80 - Total loss: 1.6003973484039307
+Epoch: 90 - Total loss: 1.598345160484314
+Epoch: 100 - Total loss: 1.5963338613510132
+Epoch: 110 - Total loss: 1.5943504571914673
+Epoch: 120 - Total loss: 1.5924016237258911
+Epoch: 130 - Total loss: 1.5905011892318726
+Epoch: 140 - Total loss: 1.5886530876159668
+Epoch: 150 - Total loss: 1.5868586301803589
+Epoch: 160 - Total loss: 1.5851163864135742
+Epoch: 170 - Total loss: 1.5834251642227173
+Epoch: 180 - Total loss: 1.5817843675613403
+Epoch: 190 - Total loss: 1.5801938772201538
+Epoch: 200 - Total loss: 1.5786516666412354
+Epoch: 210 - Total loss: 1.5771571397781372
+Epoch: 220 - Total loss: 1.5757086277008057
+Epoch: 230 - Total loss: 1.5743058919906616
+Epoch: 240 - Total loss: 1.572946548461914
+Epoch: 250 - Total loss: 1.5716300010681152
+Epoch: 260 - Total loss: 1.5703538656234741
+Epoch: 270 - Total loss: 1.5691170692443848
+Epoch: 280 - Total loss: 1.5679171085357666
+Epoch: 290 - Total loss: 1.5667541027069092
+Epoch: 300 - Total loss: 1.5656243562698364
+Epoch: 310 - Total loss: 1.5645277500152588
+Epoch: 320 - Total loss: 1.5634623765945435
+Epoch: 330 - Total loss: 1.5624268054962158
+Epoch: 340 - Total loss: 1.5614194869995117
+Epoch: 350 - Total loss: 1.5604394674301147
+Epoch: 360 - Total loss: 1.5594847202301025
+Epoch: 370 - Total loss: 1.5585548877716064
+Epoch: 380 - Total loss: 1.5576491355895996
+Epoch: 390 - Total loss: 1.5567647218704224
+Epoch: 400 - Total loss: 1.5559024810791016
+Epoch: 410 - Total loss: 1.5550607442855835
+Epoch: 420 - Total loss: 1.5542384386062622
+Epoch: 430 - Total loss: 1.5534346103668213
+Epoch: 440 - Total loss: 1.5526487827301025
+Epoch: 450 - Total loss: 1.5518804788589478
+Epoch: 460 - Total loss: 1.5511283874511719
+Epoch: 470 - Total loss: 1.5503911972045898
+Epoch: 480 - Total loss: 1.5496695041656494
+Epoch: 490 - Total loss: 1.5489619970321655
+loss is: 17.32866668701172
+  [✓ 完成] mask_ratio = 0.5 | 退出码: 0
+  结束时间: 2026-06-30 17:33:27
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.7
+  时间: 2026-06-30 17:33:27
+------------------------------------------------------------
+Load data
+Model loaded
+start train
+Epoch: 0 - Total loss: 19.057321548461914
+Epoch: 10 - Total loss: 1.627946138381958
+Epoch: 20 - Total loss: 1.6236881017684937
+Epoch: 30 - Total loss: 1.6195199489593506
+Epoch: 40 - Total loss: 1.6157952547073364
+Epoch: 50 - Total loss: 1.6125067472457886
+Epoch: 60 - Total loss: 1.6095949411392212
+Epoch: 70 - Total loss: 1.6069998741149902
+Epoch: 80 - Total loss: 1.604658842086792
+Epoch: 90 - Total loss: 1.6025055646896362
+Epoch: 100 - Total loss: 1.600484013557434
+Epoch: 110 - Total loss: 1.5985631942749023
+Epoch: 120 - Total loss: 1.5967419147491455
+Epoch: 130 - Total loss: 1.5950316190719604
+Epoch: 140 - Total loss: 1.5934346914291382
+Epoch: 150 - Total loss: 1.5919445753097534
+Epoch: 160 - Total loss: 1.5905498266220093
+Epoch: 170 - Total loss: 1.5892407894134521
+Epoch: 180 - Total loss: 1.5880054235458374
+Epoch: 190 - Total loss: 1.5868326425552368
+Epoch: 200 - Total loss: 1.5857123136520386
+Epoch: 210 - Total loss: 1.5846343040466309
+Epoch: 220 - Total loss: 1.583593726158142
+Epoch: 230 - Total loss: 1.5825848579406738
+Epoch: 240 - Total loss: 1.581604242324829
+Epoch: 250 - Total loss: 1.5806509256362915
+Epoch: 260 - Total loss: 1.579721212387085
+Epoch: 270 - Total loss: 1.5788160562515259
+Epoch: 280 - Total loss: 1.5779330730438232
+Epoch: 290 - Total loss: 1.577072024345398
+Epoch: 300 - Total loss: 1.5762313604354858
+Epoch: 310 - Total loss: 1.5754107236862183
+Epoch: 320 - Total loss: 1.5746098756790161
+Epoch: 330 - Total loss: 1.573826789855957
+Epoch: 340 - Total loss: 1.5730613470077515
+Epoch: 350 - Total loss: 1.5723137855529785
+Epoch: 360 - Total loss: 1.5715813636779785
+Epoch: 370 - Total loss: 1.5708653926849365
+Epoch: 380 - Total loss: 1.5701642036437988
+Epoch: 390 - Total loss: 1.5694777965545654
+Epoch: 400 - Total loss: 1.5688049793243408
+Epoch: 410 - Total loss: 1.5681451559066772
+Epoch: 420 - Total loss: 1.5674991607666016
+Epoch: 430 - Total loss: 1.566865086555481
+Epoch: 440 - Total loss: 1.5662428140640259
+Epoch: 450 - Total loss: 1.5656321048736572
+Epoch: 460 - Total loss: 1.5650323629379272
+Epoch: 470 - Total loss: 1.5644428730010986
+Epoch: 480 - Total loss: 1.5638638734817505
+Epoch: 490 - Total loss: 1.5632953643798828
+loss is: 20.217304229736328
+  [✓ 完成] mask_ratio = 0.7 | 退出码: 0
+  结束时间: 2026-06-30 17:36:33
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.75
+  时间: 2026-06-30 17:36:33
+------------------------------------------------------------
+Load data
+Model loaded
+start train
+Epoch: 0 - Total loss: 14.915830612182617
+Epoch: 10 - Total loss: 1.6322946548461914
+Epoch: 20 - Total loss: 1.625694751739502
+Epoch: 30 - Total loss: 1.619773507118225
+Epoch: 40 - Total loss: 1.614675521850586
+Epoch: 50 - Total loss: 1.6103628873825073
+Epoch: 60 - Total loss: 1.6067348718643188
+Epoch: 70 - Total loss: 1.6036604642868042
+Epoch: 80 - Total loss: 1.600996971130371
+Epoch: 90 - Total loss: 1.598609447479248
+Epoch: 100 - Total loss: 1.59639573097229
+Epoch: 110 - Total loss: 1.5942966938018799
+Epoch: 120 - Total loss: 1.5922783613204956
+Epoch: 130 - Total loss: 1.5903174877166748
+Epoch: 140 - Total loss: 1.5883992910385132
+Epoch: 150 - Total loss: 1.5865211486816406
+Epoch: 160 - Total loss: 1.5846909284591675
+Epoch: 170 - Total loss: 1.582915186882019
+Epoch: 180 - Total loss: 1.5811939239501953
+Epoch: 190 - Total loss: 1.5795258283615112
+Epoch: 200 - Total loss: 1.5779086351394653
+Epoch: 210 - Total loss: 1.5763397216796875
+Epoch: 220 - Total loss: 1.5748157501220703
+Epoch: 230 - Total loss: 1.5733351707458496
+Epoch: 240 - Total loss: 1.571895718574524
+Epoch: 250 - Total loss: 1.5704959630966187
+Epoch: 260 - Total loss: 1.5691324472427368
+Epoch: 270 - Total loss: 1.5678044557571411
+Epoch: 280 - Total loss: 1.566510558128357
+Epoch: 290 - Total loss: 1.565248727798462
+Epoch: 300 - Total loss: 1.564016580581665
+Epoch: 310 - Total loss: 1.5628139972686768
+Epoch: 320 - Total loss: 1.5616387128829956
+Epoch: 330 - Total loss: 1.5604894161224365
+Epoch: 340 - Total loss: 1.559365153312683
+Epoch: 350 - Total loss: 1.5582644939422607
+Epoch: 360 - Total loss: 1.5571863651275635
+Epoch: 370 - Total loss: 1.5561294555664062
+Epoch: 380 - Total loss: 1.5550938844680786
+Epoch: 390 - Total loss: 1.5540771484375
+Epoch: 400 - Total loss: 1.5530790090560913
+Epoch: 410 - Total loss: 1.5520994663238525
+Epoch: 420 - Total loss: 1.551137089729309
+Epoch: 430 - Total loss: 1.5501914024353027
+Epoch: 440 - Total loss: 1.5492613315582275
+Epoch: 450 - Total loss: 1.548346757888794
+Epoch: 460 - Total loss: 1.5474469661712646
+Epoch: 470 - Total loss: 1.54656183719635
+Epoch: 480 - Total loss: 1.5456904172897339
+Epoch: 490 - Total loss: 1.5448322296142578
+loss is: 17.250564575195312
+  [✓ 完成] mask_ratio = 0.75 | 退出码: 0
+  结束时间: 2026-06-30 17:39:29
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.9
+  时间: 2026-06-30 17:39:29
+------------------------------------------------------------
+Load data
+Model loaded
+start train
+Epoch: 0 - Total loss: 24.09109878540039
+Epoch: 10 - Total loss: 1.6300023794174194
+Epoch: 20 - Total loss: 1.6200886964797974
+Epoch: 30 - Total loss: 1.6161003112792969
+Epoch: 40 - Total loss: 1.612339973449707
+Epoch: 50 - Total loss: 1.6088601350784302
+Epoch: 60 - Total loss: 1.6056348085403442
+Epoch: 70 - Total loss: 1.6026105880737305
+Epoch: 80 - Total loss: 1.599735975265503
+Epoch: 90 - Total loss: 1.596976399421692
+Epoch: 100 - Total loss: 1.5943186283111572
+Epoch: 110 - Total loss: 1.5917574167251587
+Epoch: 120 - Total loss: 1.5892935991287231
+Epoch: 130 - Total loss: 1.5869343280792236
+Epoch: 140 - Total loss: 1.584688425064087
+Epoch: 150 - Total loss: 1.5825562477111816
+Epoch: 160 - Total loss: 1.5805318355560303
+Epoch: 170 - Total loss: 1.5786008834838867
+Epoch: 180 - Total loss: 1.576745867729187
+Epoch: 190 - Total loss: 1.5749571323394775
+Epoch: 200 - Total loss: 1.5732319355010986
+Epoch: 210 - Total loss: 1.5715744495391846
+Epoch: 220 - Total loss: 1.5699853897094727
+Epoch: 230 - Total loss: 1.5684642791748047
+Epoch: 240 - Total loss: 1.5670099258422852
+Epoch: 250 - Total loss: 1.5656167268753052
+Epoch: 260 - Total loss: 1.564283013343811
+Epoch: 270 - Total loss: 1.5630033016204834
+Epoch: 280 - Total loss: 1.5617756843566895
+Epoch: 290 - Total loss: 1.5605957508087158
+Epoch: 300 - Total loss: 1.559460997581482
+Epoch: 310 - Total loss: 1.5583693981170654
+Epoch: 320 - Total loss: 1.5573172569274902
+Epoch: 330 - Total loss: 1.5563023090362549
+Epoch: 340 - Total loss: 1.5553226470947266
+Epoch: 350 - Total loss: 1.5543761253356934
+Epoch: 360 - Total loss: 1.5534603595733643
+Epoch: 370 - Total loss: 1.552573323249817
+Epoch: 380 - Total loss: 1.5517144203186035
+Epoch: 390 - Total loss: 1.5508805513381958
+Epoch: 400 - Total loss: 1.5500710010528564
+Epoch: 410 - Total loss: 1.5492836236953735
+Epoch: 420 - Total loss: 1.5485183000564575
+Epoch: 430 - Total loss: 1.5477728843688965
+Epoch: 440 - Total loss: 1.547046184539795
+Epoch: 450 - Total loss: 1.5463374853134155
+Epoch: 460 - Total loss: 1.545644760131836
+Epoch: 470 - Total loss: 1.5449689626693726
+Epoch: 480 - Total loss: 1.5443077087402344
+Epoch: 490 - Total loss: 1.5436608791351318
+loss is: 18.990825653076172
+  [✓ 完成] mask_ratio = 0.9 | 退出码: 0
+  结束时间: 2026-06-30 17:42:38
+
+============================================================
+  全部扫描完成！
+  结束时间: 2026-06-30 17:42:38
+  日志已保存至: /data_p6/zjx/TS_JEPA/logs/eval_autoregressive_mask_sweep_20260630_172055.txt
+============================================================

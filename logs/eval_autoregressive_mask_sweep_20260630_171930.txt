@@ -1,0 +1,94 @@
+============================================================
+  TS-JEPA eval_autoregressive mask_ratio 扫描实验
+  开始时间: 2026-06-30 17:19:30
+============================================================
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.1
+  时间: 2026-06-30 17:19:30
+------------------------------------------------------------
+  File "/data_p6/zjx/TS_JEPA/eval_autoregressive.py", line 186
+    plt.savefig(f"autoregressive_step_error_{config["mask_ratio"]}.png", dpi=150)
+                                                     ^^^^^^^^^^
+SyntaxError: f-string: unmatched '['
+  [✗ 失败] mask_ratio = 0.1 | 退出码: 1
+  → 跳过当前 mask_ratio，继续下一个...
+  结束时间: 2026-06-30 17:19:30
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.2
+  时间: 2026-06-30 17:19:30
+------------------------------------------------------------
+  File "/data_p6/zjx/TS_JEPA/eval_autoregressive.py", line 186
+    plt.savefig(f"autoregressive_step_error_{config["mask_ratio"]}.png", dpi=150)
+                                                     ^^^^^^^^^^
+SyntaxError: f-string: unmatched '['
+  [✗ 失败] mask_ratio = 0.2 | 退出码: 1
+  → 跳过当前 mask_ratio，继续下一个...
+  结束时间: 2026-06-30 17:19:30
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.3
+  时间: 2026-06-30 17:19:30
+------------------------------------------------------------
+  File "/data_p6/zjx/TS_JEPA/eval_autoregressive.py", line 186
+    plt.savefig(f"autoregressive_step_error_{config["mask_ratio"]}.png", dpi=150)
+                                                     ^^^^^^^^^^
+SyntaxError: f-string: unmatched '['
+  [✗ 失败] mask_ratio = 0.3 | 退出码: 1
+  → 跳过当前 mask_ratio，继续下一个...
+  结束时间: 2026-06-30 17:19:30
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.5
+  时间: 2026-06-30 17:19:30
+------------------------------------------------------------
+  File "/data_p6/zjx/TS_JEPA/eval_autoregressive.py", line 186
+    plt.savefig(f"autoregressive_step_error_{config["mask_ratio"]}.png", dpi=150)
+                                                     ^^^^^^^^^^
+SyntaxError: f-string: unmatched '['
+  [✗ 失败] mask_ratio = 0.5 | 退出码: 1
+  → 跳过当前 mask_ratio，继续下一个...
+  结束时间: 2026-06-30 17:19:30
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.7
+  时间: 2026-06-30 17:19:30
+------------------------------------------------------------
+  File "/data_p6/zjx/TS_JEPA/eval_autoregressive.py", line 186
+    plt.savefig(f"autoregressive_step_error_{config["mask_ratio"]}.png", dpi=150)
+                                                     ^^^^^^^^^^
+SyntaxError: f-string: unmatched '['
+  [✗ 失败] mask_ratio = 0.7 | 退出码: 1
+  → 跳过当前 mask_ratio，继续下一个...
+  结束时间: 2026-06-30 17:19:30
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.75
+  时间: 2026-06-30 17:19:30
+------------------------------------------------------------
+  File "/data_p6/zjx/TS_JEPA/eval_autoregressive.py", line 186
+    plt.savefig(f"autoregressive_step_error_{config["mask_ratio"]}.png", dpi=150)
+                                                     ^^^^^^^^^^
+SyntaxError: f-string: unmatched '['
+  [✗ 失败] mask_ratio = 0.75 | 退出码: 1
+  → 跳过当前 mask_ratio，继续下一个...
+  结束时间: 2026-06-30 17:19:30
+
+------------------------------------------------------------
+  [开始] mask_ratio = 0.9
+  时间: 2026-06-30 17:19:31
+------------------------------------------------------------
+  File "/data_p6/zjx/TS_JEPA/eval_autoregressive.py", line 186
+    plt.savefig(f"autoregressive_step_error_{config["mask_ratio"]}.png", dpi=150)
+                                                     ^^^^^^^^^^
+SyntaxError: f-string: unmatched '['
+  [✗ 失败] mask_ratio = 0.9 | 退出码: 1
+  → 跳过当前 mask_ratio，继续下一个...
+  结束时间: 2026-06-30 17:19:31
+
+============================================================
+  全部扫描完成！
+  结束时间: 2026-06-30 17:19:31
+  日志已保存至: /data_p6/zjx/TS_JEPA/logs/eval_autoregressive_mask_sweep_20260630_171930.txt
+============================================================

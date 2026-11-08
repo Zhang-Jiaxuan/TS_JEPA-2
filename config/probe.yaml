@@ -1,0 +1,38 @@
+experiment:
+  name: "ts_jepa_freq_probe_v1"
+  random_seeds: [7, 11, 23, 42, 87]
+  test_size: 0.2
+  val_size: 0.1
+  standardize: true
+  pca_dim: 128
+
+data:
+  dataset_name: "UCI_HAR"
+  # 你本地准备好的 npy/csv 路径
+  x_raw_path: "data/uci_har/x_raw.npy"          # shape: [N, T, C]
+  y_activity_path: "data/uci_har/y_activity.npy"
+  tsjepa_latent_path: "data/uci_har/z_tsjepa.npy" # shape: [N, D]
+
+signal:
+  sampling_rate: 50.0
+  welch_nperseg: 128
+  welch_noverlap: 64
+  bands:
+    low: [0.1, 3.0]
+    mid: [3.0, 8.0]
+    high: [8.0, 15.0]
+
+tasks:
+  main_freq_regression: true
+  band_ratio_regression: true
+  high_band_binary: true
+  high_band_quantile_threshold: 0.7
+
+baselines:
+  use_raw_pca: true
+  use_psd_pca: true
+
+output:
+  save_dir: "outputs/probe"
+  save_models: false
+  save_oof_pred: true

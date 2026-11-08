@@ -1,0 +1,189 @@
+{
+  "step1_probe_results": [
+    {
+      "label": "dominant_freq",
+      "R2": 0.11320251226425171,
+      "MSE": 3.3550491934875026e-05,
+      "baseline_R2": -0.00015342235565185547,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "dominant_period",
+      "R2": 0.247563898563385,
+      "MSE": 407.18670654296875,
+      "baseline_R2": -3.0994415283203125e-06,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "spectral_entropy",
+      "R2": 0.7992276549339294,
+      "MSE": 0.02280556410551071,
+      "baseline_R2": -0.0009185075759887695,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "mean_freq",
+      "R2": 0.5716394186019897,
+      "MSE": 1.8201739294454455e-05,
+      "baseline_R2": -0.0008175373077392578,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "top1_power",
+      "R2": 0.848236083984375,
+      "MSE": 0.0010424989741295576,
+      "baseline_R2": -0.0005342960357666016,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "top2_power",
+      "R2": 0.8050997853279114,
+      "MSE": 0.0002808687568176538,
+      "baseline_R2": -0.00025856494903564453,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "top3_power",
+      "R2": 0.6711708903312683,
+      "MSE": 8.981756400316954e-05,
+      "baseline_R2": -0.0008827447891235352,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "top4_power",
+      "R2": 0.5763447284698486,
+      "MSE": 2.3470231099054217e-05,
+      "baseline_R2": -0.0007294416427612305,
+      "n_train": 41989,
+      "n_test": 10498
+    },
+    {
+      "label": "top5_power",
+      "R2": 0.5743895769119263,
+      "MSE": 9.593591130396817e-06,
+      "baseline_R2": -0.0005193948745727539,
+      "n_train": 41989,
+      "n_test": 10498
+    }
+  ],
+  "step2_task_results": {
+    "2A_periodic_forecast": {
+      "tsjepa": {
+        "label": "2A_periodic_forecast_TSJEPA",
+        "R2": 0.9929676055908203,
+        "MSE": 0.0008115771925076842,
+        "baseline_R2": -1.1920928955078125e-07,
+        "n_train": 41989,
+        "n_test": 10498
+      },
+      "freq_feats": {
+        "label": "2A_periodic_forecast_FreqFeats",
+        "R2": 0.17996007204055786,
+        "MSE": 0.09463679045438766,
+        "baseline_R2": -1.1920928955078125e-07,
+        "n_train": 41989,
+        "n_test": 10498
+      },
+      "time_domain": {
+        "label": "2A_periodic_forecast_TimeDomain",
+        "R2": 0.9921598434448242,
+        "MSE": 0.0009047923958860338,
+        "baseline_R2": -1.1920928955078125e-07,
+        "n_train": 41989,
+        "n_test": 10498
+      }
+    },
+    "2B_phase_prediction": {
+      "tsjepa": {
+        "label": "2B_phase_prediction_TSJEPA",
+        "R2": 0.08783876895904541,
+        "MSE": 0.0005431775934994221,
+        "baseline_R2": -0.00019812583923339844,
+        "n_train": 41989,
+        "n_test": 10498
+      },
+      "freq_feats": {
+        "label": "2B_phase_prediction_FreqFeats",
+        "R2": 0.9871383309364319,
+        "MSE": 7.658914000785444e-06,
+        "baseline_R2": -0.00019812583923339844,
+        "n_train": 41989,
+        "n_test": 10498
+      },
+      "time_domain": {
+        "label": "2B_phase_prediction_TimeDomain",
+        "R2": 0.1480240821838379,
+        "MSE": 0.0005073382053524256,
+        "baseline_R2": -0.00019812583923339844,
+        "n_train": 41989,
+        "n_test": 10498
+      }
+    },
+    "2C_freq_deviation": {
+      "tsjepa": {
+        "label": "2C_freq_deviation_TSJEPA",
+        "R2": 0.11320245265960693,
+        "MSE": 3.3550491934875026e-05,
+        "baseline_R2": -0.00015354156494140625,
+        "n_train": 41989,
+        "n_test": 10498
+      },
+      "freq_feats": {
+        "label": "2C_freq_deviation_FreqFeats",
+        "R2": 1.0,
+        "MSE": 1.238328287567897e-13,
+        "baseline_R2": -0.00015354156494140625,
+        "n_train": 41989,
+        "n_test": 10498
+      },
+      "time_domain": {
+        "label": "2C_freq_deviation_TimeDomain",
+        "R2": 0.1745532751083374,
+        "MSE": 3.122938869637437e-05,
+        "baseline_R2": -0.00015354156494140625,
+        "n_train": 41989,
+        "n_test": 10498
+      }
+    }
+  },
+  "step2_summary_rows": [
+    {
+      "task": "2A_periodic_forecast",
+      "JEPA_R2": 0.9929676055908203,
+      "FreqFeats_R2": 0.17996007204055786,
+      "TimeDomain_R2": 0.9921598434448242,
+      "gap_freq_jepa": -0.8130075335502625,
+      "damaged": false
+    },
+    {
+      "task": "2B_phase_prediction",
+      "JEPA_R2": 0.08783876895904541,
+      "FreqFeats_R2": 0.9871383309364319,
+      "TimeDomain_R2": 0.1480240821838379,
+      "gap_freq_jepa": 0.8992995619773865,
+      "damaged": true
+    },
+    {
+      "task": "2C_freq_deviation",
+      "JEPA_R2": 0.11320245265960693,
+      "FreqFeats_R2": 1.0,
+      "TimeDomain_R2": 0.1745532751083374,
+      "gap_freq_jepa": 0.8867975473403931,
+      "damaged": true
+    }
+  ],
+  "summary": {
+    "dominant_freq_R2": 0.11320251226425171,
+    "avg_freq_R2_step1": 0.578541616598765,
+    "freq_info_lost": true,
+    "n_damaged_tasks": 2,
+    "research_question_valid": true
+  }
+}

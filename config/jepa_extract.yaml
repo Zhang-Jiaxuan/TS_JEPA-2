@@ -1,0 +1,29 @@
+experiment:
+  name: "jepa_extract_v1"
+  seed: 42
+  device: "cuda"   # 没GPU就改cpu
+  batch_size: 256
+  num_workers: 4
+
+data:
+  x_path: "data/uci_har/x_raw.npy"        # [N,T,C]
+  y_path: "data/uci_har/y_activity.npy"   # [N]
+  sample_ids_path: ""                     # 可空；空则自动 0..N-1
+  train_ratio: 0.8
+
+window:
+  use_sliding_window: false
+  win_len: 128
+  stride: 64
+  pad_mode: "constant"
+
+jepa:
+  ckpt_path: "/data_p6/zjx/TS_JEPA/logs/output_model/weather/lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt"
+  model_name: "tsjepa_official"
+  # latent提取协议（必须固定）
+  feature_layer: "encoder_last"   # 例如 encoder_last / projector_in
+  pooling: "mean"                 # mean / cls / flatten
+  l2_normalize: true
+
+output:
+  save_dir: "outputs/latents"

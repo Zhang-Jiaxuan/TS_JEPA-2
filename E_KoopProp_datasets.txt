@@ -1,0 +1,3122 @@
+======================================================================
+📊 KoopJEPA 网格实验（自回归多步预测）
+   数据集: ['Weather', 'ETTh1', 'ETTm1', 'ETTh2', 'ETTm2']
+   预测长度: [96, 32, 192, 336, 720]
+   训练目标: 始终预测下一个patch（32点）
+   测试方式: 自回归滚动 ceil(pred_len/32) 步
+======================================================================
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=Weather | pred_len=96 | ar_steps=3
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=Weather | pred_len=96 (ar_steps=3)
+  train=30,829 | val=3,425 | test可用步数=484 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=34.235671
+    ep   2 | val_mse=31.298575
+    ep   3 | val_mse=28.573619
+    ep  50 | val_mse=1.527845
+    ep 100 | val_mse=1.521526
+    ep 150 | val_mse=1.518238
+    ep 200 | val_mse=1.516662
+    ep 250 | val_mse=1.514640
+    ep 300 | val_mse=1.514136
+    ep 350 | val_mse=1.513745
+    [早停] ep=398 | best_val_mse=1.513301
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=15,808 | pred_len=96 | ar_steps=3 | 评估窗口数=161
+    ✅ MSE=0.005426 | MAE=0.052121 (基于161个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.521558
+    ep   2 | val_mse=26.066506
+    ep   3 | val_mse=23.803704
+    ep  50 | val_mse=1.519118
+    ep 100 | val_mse=1.514886
+    ep 150 | val_mse=1.513795
+    ep 200 | val_mse=1.512439
+    [早停] ep=232 | best_val_mse=1.512325
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=15,808 | pred_len=96 | ar_steps=3 | 评估窗口数=161
+    ✅ MSE=0.003967 | MAE=0.045726 (基于161个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=4.090035
+    ep   2 | val_freq_mse=1.052920
+    ep   3 | val_freq_mse=0.986600
+    ep  30 | val_freq_mse=0.988686
+    ep  60 | val_freq_mse=1.001250
+    ep  90 | val_freq_mse=0.995125
+    ep 120 | val_freq_mse=0.988105
+    ep 150 | val_freq_mse=0.981523
+    ep 180 | val_freq_mse=0.982994
+    [早停] ep=180 | best=0.981523
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=29.212800
+    ep   2 | val_mse=26.614012
+    ep   3 | val_mse=24.232232
+    ep  50 | val_mse=1.522904
+    ep 100 | val_mse=1.515053
+    ep 150 | val_mse=1.512968
+    ep 200 | val_mse=1.512710
+    ep 250 | val_mse=1.510839
+    ep 300 | val_mse=1.511179
+    [早停] ep=333 | best_val_mse=1.510687
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=15,808 | pred_len=96 | ar_steps=3 | 评估窗口数=161
+    ✅ MSE=0.003624 | MAE=0.043595 (基于161个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.164190
+    ep   2 | val_freq_mse=0.996717
+    ep   3 | val_freq_mse=0.992387
+    ep  30 | val_freq_mse=0.984309
+    ep  60 | val_freq_mse=0.985769
+    ep  90 | val_freq_mse=0.984911
+    ep 120 | val_freq_mse=0.984931
+    ep 150 | val_freq_mse=0.987813
+    ep 180 | val_freq_mse=0.984021
+    [早停] ep=189 | best=0.983675
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=13.642048
+    ep   2 | val_mse=12.667054
+    ep   3 | val_mse=11.749865
+    ep  50 | val_mse=1.517994
+    ep 100 | val_mse=1.511880
+    ep 150 | val_mse=1.509799
+    ep 200 | val_mse=1.508397
+    ep 250 | val_mse=1.508136
+    ep 300 | val_mse=1.507862
+    ep 350 | val_mse=1.507680
+    [早停] ep=393 | best_val_mse=1.507335
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=15,808 | pred_len=96 | ar_steps=3 | 评估窗口数=161
+    ✅ MSE=0.003143 | MAE=0.040888 (基于161个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=7.08121 | lyap=0.00198 | val=6.71801 | ρ(K)=0.6932
+    ep   2 | pred=6.47829 | lyap=0.00198 | val=6.14270 | ρ(K)=0.6931
+    ep   3 | pred=5.92879 | lyap=0.00198 | val=5.62027 | ρ(K)=0.6931
+    ep  50 | pred=1.56224 | lyap=0.00197 | val=1.51713 | ρ(K)=0.6952
+    ep 100 | pred=1.55769 | lyap=0.00196 | val=1.51177 | ρ(K)=0.6976
+    ep 150 | pred=1.55510 | lyap=0.00195 | val=1.50880 | ρ(K)=0.7004
+    ep 200 | pred=1.55368 | lyap=0.00193 | val=1.50867 | ρ(K)=0.7031
+    ep 250 | pred=1.55327 | lyap=0.00192 | val=1.50760 | ρ(K)=0.7052
+    ep 300 | pred=1.55288 | lyap=0.00192 | val=1.50731 | ρ(K)=0.7068
+    ep 350 | pred=1.55261 | lyap=0.00191 | val=1.50688 | ρ(K)=0.7079
+    ep 400 | pred=1.55236 | lyap=0.00191 | val=1.50677 | ρ(K)=0.7085
+    [早停] ep=431 | best_val_mse=1.506698
+    ✅ 完成 | best_val=1.506698 | ρ(K)=0.708336 | σ∈[0.6898,0.7191]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=15,808 | pred_len=96 | ar_steps=3 | 评估窗口数=161
+    ✅ MSE=0.002783 | MAE=0.038458 (基于161个窗口)
+
+─────────────────────────────────────────────────────────────────
+  Weather | pred_len=96 (ar_steps=3) 消融结果:
+    A_Scratch            MSE=0.005426  MAE=0.052121  +36.8%
+    B_JEPA               MSE=0.003967  MAE=0.045726  (基准)
+    C_Direct             MSE=0.003624  MAE=0.043595  -8.6%
+    D_Decoupled          MSE=0.003143  MAE=0.040888  -20.8%
+    E_KoopProp           MSE=0.002783  MAE=0.038458  -29.8%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=Weather | pred_len=32 | ar_steps=1
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=Weather | pred_len=32 (ar_steps=1)
+  train=30,829 | val=3,425 | test可用步数=484 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=34.235671
+    ep   2 | val_mse=31.298575
+    ep   3 | val_mse=28.573619
+    ep  50 | val_mse=1.527845
+    ep 100 | val_mse=1.521526
+    ep 150 | val_mse=1.518238
+    ep 200 | val_mse=1.516662
+    ep 250 | val_mse=1.514640
+    ep 300 | val_mse=1.514136
+    ep 350 | val_mse=1.513745
+    [早停] ep=398 | best_val_mse=1.513301
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=15,808 | pred_len=32 | ar_steps=1 | 评估窗口数=484
+    ✅ MSE=0.004752 | MAE=0.049135 (基于484个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.521558
+    ep   2 | val_mse=26.066506
+    ep   3 | val_mse=23.803704
+    ep  50 | val_mse=1.519118
+    ep 100 | val_mse=1.514886
+    ep 150 | val_mse=1.513795
+    ep 200 | val_mse=1.512439
+    [早停] ep=232 | best_val_mse=1.512325
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=15,808 | pred_len=32 | ar_steps=1 | 评估窗口数=484
+    ✅ MSE=0.003567 | MAE=0.043519 (基于484个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=4.090035
+    ep   2 | val_freq_mse=1.052920
+    ep   3 | val_freq_mse=0.986600
+    ep  30 | val_freq_mse=0.988686
+    ep  60 | val_freq_mse=1.001250
+    ep  90 | val_freq_mse=0.995125
+    ep 120 | val_freq_mse=0.988105
+    ep 150 | val_freq_mse=0.981523
+    ep 180 | val_freq_mse=0.982994
+    [早停] ep=180 | best=0.981523
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=29.212800
+    ep   2 | val_mse=26.614012
+    ep   3 | val_mse=24.232232
+    ep  50 | val_mse=1.522904
+    ep 100 | val_mse=1.515053
+    ep 150 | val_mse=1.512968
+    ep 200 | val_mse=1.512710
+    ep 250 | val_mse=1.510839
+    ep 300 | val_mse=1.511179
+    [早停] ep=333 | best_val_mse=1.510687
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=15,808 | pred_len=32 | ar_steps=1 | 评估窗口数=484
+    ✅ MSE=0.003513 | MAE=0.042863 (基于484个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.164190
+    ep   2 | val_freq_mse=0.996717
+    ep   3 | val_freq_mse=0.992387
+    ep  30 | val_freq_mse=0.984309
+    ep  60 | val_freq_mse=0.985769
+    ep  90 | val_freq_mse=0.984911
+    ep 120 | val_freq_mse=0.984931
+    ep 150 | val_freq_mse=0.987813
+    ep 180 | val_freq_mse=0.984021
+    [早停] ep=189 | best=0.983675
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=13.642048
+    ep   2 | val_mse=12.667054
+    ep   3 | val_mse=11.749865
+    ep  50 | val_mse=1.517994
+    ep 100 | val_mse=1.511880
+    ep 150 | val_mse=1.509799
+    ep 200 | val_mse=1.508397
+    ep 250 | val_mse=1.508136
+    ep 300 | val_mse=1.507862
+    ep 350 | val_mse=1.507680
+    [早停] ep=393 | best_val_mse=1.507335
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=15,808 | pred_len=32 | ar_steps=1 | 评估窗口数=484
+    ✅ MSE=0.003045 | MAE=0.040161 (基于484个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=7.08121 | lyap=0.00198 | val=6.71801 | ρ(K)=0.6932
+    ep   2 | pred=6.47829 | lyap=0.00198 | val=6.14270 | ρ(K)=0.6931
+    ep   3 | pred=5.92879 | lyap=0.00198 | val=5.62027 | ρ(K)=0.6931
+    ep  50 | pred=1.56224 | lyap=0.00197 | val=1.51713 | ρ(K)=0.6952
+    ep 100 | pred=1.55769 | lyap=0.00196 | val=1.51177 | ρ(K)=0.6976
+    ep 150 | pred=1.55510 | lyap=0.00195 | val=1.50880 | ρ(K)=0.7004
+    ep 200 | pred=1.55368 | lyap=0.00193 | val=1.50867 | ρ(K)=0.7031
+    ep 250 | pred=1.55327 | lyap=0.00192 | val=1.50760 | ρ(K)=0.7052
+    ep 300 | pred=1.55288 | lyap=0.00192 | val=1.50731 | ρ(K)=0.7068
+    ep 350 | pred=1.55261 | lyap=0.00191 | val=1.50688 | ρ(K)=0.7079
+    ep 400 | pred=1.55236 | lyap=0.00191 | val=1.50677 | ρ(K)=0.7085
+    [早停] ep=431 | best_val_mse=1.506698
+    ✅ 完成 | best_val=1.506698 | ρ(K)=0.708336 | σ∈[0.6898,0.7191]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=15,808 | pred_len=32 | ar_steps=1 | 评估窗口数=484
+    ✅ MSE=0.002670 | MAE=0.037692 (基于484个窗口)
+
+─────────────────────────────────────────────────────────────────
+  Weather | pred_len=32 (ar_steps=1) 消融结果:
+    A_Scratch            MSE=0.004752  MAE=0.049135  +33.2%
+    B_JEPA               MSE=0.003567  MAE=0.043519  (基准)
+    C_Direct             MSE=0.003513  MAE=0.042863  -1.5%
+    D_Decoupled          MSE=0.003045  MAE=0.040161  -14.6%
+    E_KoopProp           MSE=0.002670  MAE=0.037692  -25.1%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=Weather | pred_len=192 | ar_steps=6
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=Weather | pred_len=192 (ar_steps=6)
+  train=30,829 | val=3,425 | test可用步数=484 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=34.235671
+    ep   2 | val_mse=31.298575
+    ep   3 | val_mse=28.573619
+    ep  50 | val_mse=1.527845
+    ep 100 | val_mse=1.521526
+    ep 150 | val_mse=1.518238
+    ep 200 | val_mse=1.516662
+    ep 250 | val_mse=1.514640
+    ep 300 | val_mse=1.514136
+    ep 350 | val_mse=1.513745
+    [早停] ep=398 | best_val_mse=1.513301
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=15,808 | pred_len=192 | ar_steps=6 | 评估窗口数=80
+    ✅ MSE=0.007994 | MAE=0.061483 (基于80个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.521558
+    ep   2 | val_mse=26.066506
+    ep   3 | val_mse=23.803704
+    ep  50 | val_mse=1.519118
+    ep 100 | val_mse=1.514886
+    ep 150 | val_mse=1.513795
+    ep 200 | val_mse=1.512439
+    [早停] ep=232 | best_val_mse=1.512325
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=15,808 | pred_len=192 | ar_steps=6 | 评估窗口数=80
+    ✅ MSE=0.005467 | MAE=0.052964 (基于80个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=4.090035
+    ep   2 | val_freq_mse=1.052920
+    ep   3 | val_freq_mse=0.986600
+    ep  30 | val_freq_mse=0.988686
+    ep  60 | val_freq_mse=1.001250
+    ep  90 | val_freq_mse=0.995125
+    ep 120 | val_freq_mse=0.988105
+    ep 150 | val_freq_mse=0.981523
+    ep 180 | val_freq_mse=0.982994
+    [早停] ep=180 | best=0.981523
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=29.212800
+    ep   2 | val_mse=26.614012
+    ep   3 | val_mse=24.232232
+    ep  50 | val_mse=1.522904
+    ep 100 | val_mse=1.515053
+    ep 150 | val_mse=1.512968
+    ep 200 | val_mse=1.512710
+    ep 250 | val_mse=1.510839
+    ep 300 | val_mse=1.511179
+    [早停] ep=333 | best_val_mse=1.510687
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=15,808 | pred_len=192 | ar_steps=6 | 评估窗口数=80
+    ✅ MSE=0.004230 | MAE=0.047264 (基于80个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.164190
+    ep   2 | val_freq_mse=0.996717
+    ep   3 | val_freq_mse=0.992387
+    ep  30 | val_freq_mse=0.984309
+    ep  60 | val_freq_mse=0.985769
+    ep  90 | val_freq_mse=0.984911
+    ep 120 | val_freq_mse=0.984931
+    ep 150 | val_freq_mse=0.987813
+    ep 180 | val_freq_mse=0.984021
+    [早停] ep=189 | best=0.983675
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=13.642048
+    ep   2 | val_mse=12.667054
+    ep   3 | val_mse=11.749865
+    ep  50 | val_mse=1.517994
+    ep 100 | val_mse=1.511880
+    ep 150 | val_mse=1.509799
+    ep 200 | val_mse=1.508397
+    ep 250 | val_mse=1.508136
+    ep 300 | val_mse=1.507862
+    ep 350 | val_mse=1.507680
+    [早停] ep=393 | best_val_mse=1.507335
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=15,808 | pred_len=192 | ar_steps=6 | 评估窗口数=80
+    ✅ MSE=0.003309 | MAE=0.041993 (基于80个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=7.08121 | lyap=0.00198 | val=6.71801 | ρ(K)=0.6932
+    ep   2 | pred=6.47829 | lyap=0.00198 | val=6.14270 | ρ(K)=0.6931
+    ep   3 | pred=5.92879 | lyap=0.00198 | val=5.62027 | ρ(K)=0.6931
+    ep  50 | pred=1.56224 | lyap=0.00197 | val=1.51713 | ρ(K)=0.6952
+    ep 100 | pred=1.55769 | lyap=0.00196 | val=1.51177 | ρ(K)=0.6976
+    ep 150 | pred=1.55510 | lyap=0.00195 | val=1.50880 | ρ(K)=0.7004
+    ep 200 | pred=1.55368 | lyap=0.00193 | val=1.50867 | ρ(K)=0.7031
+    ep 250 | pred=1.55327 | lyap=0.00192 | val=1.50760 | ρ(K)=0.7052
+    ep 300 | pred=1.55288 | lyap=0.00192 | val=1.50731 | ρ(K)=0.7068
+    ep 350 | pred=1.55261 | lyap=0.00191 | val=1.50688 | ρ(K)=0.7079
+    ep 400 | pred=1.55236 | lyap=0.00191 | val=1.50677 | ρ(K)=0.7085
+    [早停] ep=431 | best_val_mse=1.506698
+    ✅ 完成 | best_val=1.506698 | ρ(K)=0.708336 | σ∈[0.6898,0.7191]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=15,808 | pred_len=192 | ar_steps=6 | 评估窗口数=80
+    ✅ MSE=0.002960 | MAE=0.039765 (基于80个窗口)
+
+─────────────────────────────────────────────────────────────────
+  Weather | pred_len=192 (ar_steps=6) 消融结果:
+    A_Scratch            MSE=0.007994  MAE=0.061483  +46.2%
+    B_JEPA               MSE=0.005467  MAE=0.052964  (基准)
+    C_Direct             MSE=0.004230  MAE=0.047264  -22.6%
+    D_Decoupled          MSE=0.003309  MAE=0.041993  -39.5%
+    E_KoopProp           MSE=0.002960  MAE=0.039765  -45.9%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=Weather | pred_len=336 | ar_steps=11
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=Weather | pred_len=336 (ar_steps=11)
+  train=30,829 | val=3,425 | test可用步数=484 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=34.235671
+    ep   2 | val_mse=31.298575
+    ep   3 | val_mse=28.573619
+    ep  50 | val_mse=1.527845
+    ep 100 | val_mse=1.521526
+    ep 150 | val_mse=1.518238
+    ep 200 | val_mse=1.516662
+    ep 250 | val_mse=1.514640
+    ep 300 | val_mse=1.514136
+    ep 350 | val_mse=1.513745
+    [早停] ep=398 | best_val_mse=1.513301
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=15,808 | pred_len=336 | ar_steps=11 | 评估窗口数=46
+    ✅ MSE=0.020065 | MAE=0.088711 (基于46个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.521558
+    ep   2 | val_mse=26.066506
+    ep   3 | val_mse=23.803704
+    ep  50 | val_mse=1.519118
+    ep 100 | val_mse=1.514886
+    ep 150 | val_mse=1.513795
+    ep 200 | val_mse=1.512439
+    [早停] ep=232 | best_val_mse=1.512325
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=15,808 | pred_len=336 | ar_steps=11 | 评估窗口数=46
+    ✅ MSE=0.014622 | MAE=0.077952 (基于46个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=4.090035
+    ep   2 | val_freq_mse=1.052920
+    ep   3 | val_freq_mse=0.986600
+    ep  30 | val_freq_mse=0.988686
+    ep  60 | val_freq_mse=1.001250
+    ep  90 | val_freq_mse=0.995125
+    ep 120 | val_freq_mse=0.988105
+    ep 150 | val_freq_mse=0.981523
+    ep 180 | val_freq_mse=0.982994
+    [早停] ep=180 | best=0.981523
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=29.212800
+    ep   2 | val_mse=26.614012
+    ep   3 | val_mse=24.232232
+    ep  50 | val_mse=1.522904
+    ep 100 | val_mse=1.515053
+    ep 150 | val_mse=1.512968
+    ep 200 | val_mse=1.512710
+    ep 250 | val_mse=1.510839
+    ep 300 | val_mse=1.511179
+    [早停] ep=333 | best_val_mse=1.510687
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=15,808 | pred_len=336 | ar_steps=11 | 评估窗口数=46
+    ✅ MSE=0.007337 | MAE=0.060010 (基于46个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.164190
+    ep   2 | val_freq_mse=0.996717
+    ep   3 | val_freq_mse=0.992387
+    ep  30 | val_freq_mse=0.984309
+    ep  60 | val_freq_mse=0.985769
+    ep  90 | val_freq_mse=0.984911
+    ep 120 | val_freq_mse=0.984931
+    ep 150 | val_freq_mse=0.987813
+    ep 180 | val_freq_mse=0.984021
+    [早停] ep=189 | best=0.983675
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=13.642048
+    ep   2 | val_mse=12.667054
+    ep   3 | val_mse=11.749865
+    ep  50 | val_mse=1.517994
+    ep 100 | val_mse=1.511880
+    ep 150 | val_mse=1.509799
+    ep 200 | val_mse=1.508397
+    ep 250 | val_mse=1.508136
+    ep 300 | val_mse=1.507862
+    ep 350 | val_mse=1.507680
+    [早停] ep=393 | best_val_mse=1.507335
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=15,808 | pred_len=336 | ar_steps=11 | 评估窗口数=46
+    ✅ MSE=0.003616 | MAE=0.043898 (基于46个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=7.08121 | lyap=0.00198 | val=6.71801 | ρ(K)=0.6932
+    ep   2 | pred=6.47829 | lyap=0.00198 | val=6.14270 | ρ(K)=0.6931
+    ep   3 | pred=5.92879 | lyap=0.00198 | val=5.62027 | ρ(K)=0.6931
+    ep  50 | pred=1.56224 | lyap=0.00197 | val=1.51713 | ρ(K)=0.6952
+    ep 100 | pred=1.55769 | lyap=0.00196 | val=1.51177 | ρ(K)=0.6976
+    ep 150 | pred=1.55510 | lyap=0.00195 | val=1.50880 | ρ(K)=0.7004
+    ep 200 | pred=1.55368 | lyap=0.00193 | val=1.50867 | ρ(K)=0.7031
+    ep 250 | pred=1.55327 | lyap=0.00192 | val=1.50760 | ρ(K)=0.7052
+    ep 300 | pred=1.55288 | lyap=0.00192 | val=1.50731 | ρ(K)=0.7068
+    ep 350 | pred=1.55261 | lyap=0.00191 | val=1.50688 | ρ(K)=0.7079
+    ep 400 | pred=1.55236 | lyap=0.00191 | val=1.50677 | ρ(K)=0.7085
+    [早停] ep=431 | best_val_mse=1.506698
+    ✅ 完成 | best_val=1.506698 | ρ(K)=0.708336 | σ∈[0.6898,0.7191]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=15,808 | pred_len=336 | ar_steps=11 | 评估窗口数=46
+    ✅ MSE=0.003244 | MAE=0.041623 (基于46个窗口)
+
+─────────────────────────────────────────────────────────────────
+  Weather | pred_len=336 (ar_steps=11) 消融结果:
+    A_Scratch            MSE=0.020065  MAE=0.088711  +37.2%
+    B_JEPA               MSE=0.014622  MAE=0.077952  (基准)
+    C_Direct             MSE=0.007337  MAE=0.060010  -49.8%
+    D_Decoupled          MSE=0.003616  MAE=0.043898  -75.3%
+    E_KoopProp           MSE=0.003244  MAE=0.041623  -77.8%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=Weather | pred_len=720 | ar_steps=23
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=Weather | pred_len=720 (ar_steps=23)
+  train=30,829 | val=3,425 | test可用步数=484 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=34.235671
+    ep   2 | val_mse=31.298575
+    ep   3 | val_mse=28.573619
+    ep  50 | val_mse=1.527845
+    ep 100 | val_mse=1.521526
+    ep 150 | val_mse=1.518238
+    ep 200 | val_mse=1.516662
+    ep 250 | val_mse=1.514640
+    ep 300 | val_mse=1.514136
+    ep 350 | val_mse=1.513745
+    [早停] ep=398 | best_val_mse=1.513301
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=15,808 | pred_len=720 | ar_steps=23 | 评估窗口数=21
+    ✅ MSE=0.395909 | MAE=0.313270 (基于21个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.521558
+    ep   2 | val_mse=26.066506
+    ep   3 | val_mse=23.803704
+    ep  50 | val_mse=1.519118
+    ep 100 | val_mse=1.514886
+    ep 150 | val_mse=1.513795
+    ep 200 | val_mse=1.512439
+    [早停] ep=232 | best_val_mse=1.512325
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=15,808 | pred_len=720 | ar_steps=23 | 评估窗口数=21
+    ✅ MSE=0.664935 | MAE=0.384404 (基于21个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=4.090035
+    ep   2 | val_freq_mse=1.052920
+    ep   3 | val_freq_mse=0.986600
+    ep  30 | val_freq_mse=0.988686
+    ep  60 | val_freq_mse=1.001250
+    ep  90 | val_freq_mse=0.995125
+    ep 120 | val_freq_mse=0.988105
+    ep 150 | val_freq_mse=0.981523
+    ep 180 | val_freq_mse=0.982994
+    [早停] ep=180 | best=0.981523
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=29.212800
+    ep   2 | val_mse=26.614012
+    ep   3 | val_mse=24.232232
+    ep  50 | val_mse=1.522904
+    ep 100 | val_mse=1.515053
+    ep 150 | val_mse=1.512968
+    ep 200 | val_mse=1.512710
+    ep 250 | val_mse=1.510839
+    ep 300 | val_mse=1.511179
+    [早停] ep=333 | best_val_mse=1.510687
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=15,808 | pred_len=720 | ar_steps=23 | 评估窗口数=21
+    ✅ MSE=0.674291 | MAE=0.371864 (基于21个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.164190
+    ep   2 | val_freq_mse=0.996717
+    ep   3 | val_freq_mse=0.992387
+    ep  30 | val_freq_mse=0.984309
+    ep  60 | val_freq_mse=0.985769
+    ep  90 | val_freq_mse=0.984911
+    ep 120 | val_freq_mse=0.984931
+    ep 150 | val_freq_mse=0.987813
+    ep 180 | val_freq_mse=0.984021
+    [早停] ep=189 | best=0.983675
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=13.642048
+    ep   2 | val_mse=12.667054
+    ep   3 | val_mse=11.749865
+    ep  50 | val_mse=1.517994
+    ep 100 | val_mse=1.511880
+    ep 150 | val_mse=1.509799
+    ep 200 | val_mse=1.508397
+    ep 250 | val_mse=1.508136
+    ep 300 | val_mse=1.507862
+    ep 350 | val_mse=1.507680
+    [早停] ep=393 | best_val_mse=1.507335
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=15,808 | pred_len=720 | ar_steps=23 | 评估窗口数=21
+    ✅ MSE=0.005086 | MAE=0.052198 (基于21个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=7.08121 | lyap=0.00198 | val=6.71801 | ρ(K)=0.6932
+    ep   2 | pred=6.47829 | lyap=0.00198 | val=6.14270 | ρ(K)=0.6931
+    ep   3 | pred=5.92879 | lyap=0.00198 | val=5.62027 | ρ(K)=0.6931
+    ep  50 | pred=1.56224 | lyap=0.00197 | val=1.51713 | ρ(K)=0.6952
+    ep 100 | pred=1.55769 | lyap=0.00196 | val=1.51177 | ρ(K)=0.6976
+    ep 150 | pred=1.55510 | lyap=0.00195 | val=1.50880 | ρ(K)=0.7004
+    ep 200 | pred=1.55368 | lyap=0.00193 | val=1.50867 | ρ(K)=0.7031
+    ep 250 | pred=1.55327 | lyap=0.00192 | val=1.50760 | ρ(K)=0.7052
+    ep 300 | pred=1.55288 | lyap=0.00192 | val=1.50731 | ρ(K)=0.7068
+    ep 350 | pred=1.55261 | lyap=0.00191 | val=1.50688 | ρ(K)=0.7079
+    ep 400 | pred=1.55236 | lyap=0.00191 | val=1.50677 | ρ(K)=0.7085
+    [早停] ep=431 | best_val_mse=1.506698
+    ✅ 完成 | best_val=1.506698 | ρ(K)=0.708336 | σ∈[0.6898,0.7191]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=15,808 | pred_len=720 | ar_steps=23 | 评估窗口数=21
+    ✅ MSE=0.006409 | MAE=0.056652 (基于21个窗口)
+
+─────────────────────────────────────────────────────────────────
+  Weather | pred_len=720 (ar_steps=23) 消融结果:
+    A_Scratch            MSE=0.395909  MAE=0.313270  -40.5%
+    B_JEPA               MSE=0.664935  MAE=0.384404  (基准)
+    C_Direct             MSE=0.674291  MAE=0.371864  +1.4%
+    D_Decoupled          MSE=0.005086  MAE=0.052198  -99.2%
+    E_KoopProp           MSE=0.006409  MAE=0.056652  -99.0%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTh1 | pred_len=96 | ar_steps=3
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTh1 | pred_len=96 (ar_steps=3)
+  train=10,191 | val=1,132 | test可用步数=153 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=36.150504
+    ep   2 | val_mse=35.309685
+    ep   3 | val_mse=34.487356
+    ep  50 | val_mse=9.902394
+    ep 100 | val_mse=1.923487
+    ep 150 | val_mse=0.504281
+    ep 200 | val_mse=0.286982
+    ep 250 | val_mse=0.263898
+    ep 300 | val_mse=0.254361
+    ep 350 | val_mse=0.248954
+    ep 400 | val_mse=0.246278
+    ep 450 | val_mse=0.245154
+    ep 500 | val_mse=0.244860
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=5,226 | pred_len=96 | ar_steps=3 | 评估窗口数=51
+    ✅ MSE=0.218898 | MAE=0.373287 (基于51个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.362958
+    ep   2 | val_mse=27.668174
+    ep   3 | val_mse=26.988489
+    ep  50 | val_mse=7.172081
+    ep 100 | val_mse=1.166043
+    ep 150 | val_mse=0.307776
+    ep 200 | val_mse=0.289002
+    ep 250 | val_mse=0.283659
+    ep 300 | val_mse=0.280187
+    ep 350 | val_mse=0.277995
+    ep 400 | val_mse=0.276843
+    ep 450 | val_mse=0.276353
+    ep 500 | val_mse=0.276223
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=5,226 | pred_len=96 | ar_steps=3 | 评估窗口数=51
+    ✅ MSE=0.281743 | MAE=0.418707 (基于51个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.608422
+    ep   2 | val_freq_mse=1.346379
+    ep   3 | val_freq_mse=1.141214
+    ep  30 | val_freq_mse=0.946476
+    ep  60 | val_freq_mse=0.936416
+    ep  90 | val_freq_mse=0.915845
+    ep 120 | val_freq_mse=0.911056
+    ep 150 | val_freq_mse=0.910293
+    ep 180 | val_freq_mse=0.908551
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=29.002266
+    ep   2 | val_mse=28.287024
+    ep   3 | val_mse=27.581694
+    ep  50 | val_mse=6.613592
+    ep 100 | val_mse=0.814795
+    ep 150 | val_mse=0.288469
+    ep 200 | val_mse=0.280891
+    ep 250 | val_mse=0.276274
+    ep 300 | val_mse=0.273000
+    ep 350 | val_mse=0.271015
+    ep 400 | val_mse=0.269885
+    ep 450 | val_mse=0.269411
+    ep 500 | val_mse=0.269291
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=5,226 | pred_len=96 | ar_steps=3 | 评估窗口数=51
+    ✅ MSE=0.248488 | MAE=0.395641 (基于51个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.503651
+    ep   2 | val_freq_mse=1.331432
+    ep   3 | val_freq_mse=1.162924
+    ep  30 | val_freq_mse=0.965775
+    ep  60 | val_freq_mse=0.954065
+    ep  90 | val_freq_mse=0.950368
+    ep 120 | val_freq_mse=0.945989
+    ep 150 | val_freq_mse=0.943738
+    ep 180 | val_freq_mse=0.942675
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=8.898968
+    ep   2 | val_mse=8.681581
+    ep   3 | val_mse=8.467503
+    ep  50 | val_mse=2.013672
+    ep 100 | val_mse=0.321595
+    ep 150 | val_mse=0.278926
+    ep 200 | val_mse=0.275425
+    ep 250 | val_mse=0.273041
+    ep 300 | val_mse=0.271263
+    ep 350 | val_mse=0.270209
+    ep 400 | val_mse=0.269601
+    ep 450 | val_mse=0.269345
+    ep 500 | val_mse=0.269265
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=5,226 | pred_len=96 | ar_steps=3 | 评估窗口数=51
+    ✅ MSE=0.196510 | MAE=0.360217 (基于51个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=8.92483 | lyap=0.00198 | val=8.80987 | ρ(K)=0.6932
+    ep   2 | pred=8.69639 | lyap=0.00198 | val=8.60302 | ρ(K)=0.6932
+    ep   3 | pred=8.56233 | lyap=0.00198 | val=8.40033 | ρ(K)=0.6932
+    ep  50 | pred=2.38696 | lyap=0.00198 | val=2.34152 | ρ(K)=0.6942
+    ep 100 | pred=0.51347 | lyap=0.00197 | val=0.49294 | ρ(K)=0.6962
+    ep 150 | pred=0.28264 | lyap=0.00197 | val=0.27722 | ρ(K)=0.6968
+    ep 200 | pred=0.28474 | lyap=0.00197 | val=0.27291 | ρ(K)=0.6968
+    ep 250 | pred=0.28021 | lyap=0.00197 | val=0.27044 | ρ(K)=0.6967
+    ep 300 | pred=0.27640 | lyap=0.00197 | val=0.26880 | ρ(K)=0.6967
+    ep 350 | pred=0.26552 | lyap=0.00197 | val=0.26774 | ρ(K)=0.6966
+    ep 400 | pred=0.27498 | lyap=0.00197 | val=0.26716 | ρ(K)=0.6966
+    ep 450 | pred=0.26478 | lyap=0.00197 | val=0.26694 | ρ(K)=0.6966
+    ep 500 | pred=0.27902 | lyap=0.00197 | val=0.26687 | ρ(K)=0.6966
+    ✅ 完成 | best_val=0.266871 | ρ(K)=0.696607 | σ∈[0.6864,0.7032]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=5,226 | pred_len=96 | ar_steps=3 | 评估窗口数=51
+    ✅ MSE=0.196878 | MAE=0.360255 (基于51个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTh1 | pred_len=96 (ar_steps=3) 消融结果:
+    A_Scratch            MSE=0.218898  MAE=0.373287  -22.3%
+    B_JEPA               MSE=0.281743  MAE=0.418707  (基准)
+    C_Direct             MSE=0.248488  MAE=0.395641  -11.8%
+    D_Decoupled          MSE=0.196510  MAE=0.360217  -30.3%
+    E_KoopProp           MSE=0.196878  MAE=0.360255  -30.1%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTh1 | pred_len=32 | ar_steps=1
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTh1 | pred_len=32 (ar_steps=1)
+  train=10,191 | val=1,132 | test可用步数=153 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=36.150504
+    ep   2 | val_mse=35.309685
+    ep   3 | val_mse=34.487356
+    ep  50 | val_mse=9.902394
+    ep 100 | val_mse=1.923487
+    ep 150 | val_mse=0.504281
+    ep 200 | val_mse=0.286982
+    ep 250 | val_mse=0.263898
+    ep 300 | val_mse=0.254361
+    ep 350 | val_mse=0.248954
+    ep 400 | val_mse=0.246278
+    ep 450 | val_mse=0.245154
+    ep 500 | val_mse=0.244860
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=5,226 | pred_len=32 | ar_steps=1 | 评估窗口数=153
+    ✅ MSE=0.199874 | MAE=0.356179 (基于153个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.362958
+    ep   2 | val_mse=27.668174
+    ep   3 | val_mse=26.988489
+    ep  50 | val_mse=7.172081
+    ep 100 | val_mse=1.166043
+    ep 150 | val_mse=0.307776
+    ep 200 | val_mse=0.289002
+    ep 250 | val_mse=0.283659
+    ep 300 | val_mse=0.280187
+    ep 350 | val_mse=0.277995
+    ep 400 | val_mse=0.276843
+    ep 450 | val_mse=0.276353
+    ep 500 | val_mse=0.276223
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=5,226 | pred_len=32 | ar_steps=1 | 评估窗口数=153
+    ✅ MSE=0.251492 | MAE=0.396044 (基于153个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.608422
+    ep   2 | val_freq_mse=1.346379
+    ep   3 | val_freq_mse=1.141214
+    ep  30 | val_freq_mse=0.946476
+    ep  60 | val_freq_mse=0.936416
+    ep  90 | val_freq_mse=0.915845
+    ep 120 | val_freq_mse=0.911056
+    ep 150 | val_freq_mse=0.910293
+    ep 180 | val_freq_mse=0.908551
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=29.002266
+    ep   2 | val_mse=28.287024
+    ep   3 | val_mse=27.581694
+    ep  50 | val_mse=6.613592
+    ep 100 | val_mse=0.814795
+    ep 150 | val_mse=0.288469
+    ep 200 | val_mse=0.280891
+    ep 250 | val_mse=0.276274
+    ep 300 | val_mse=0.273000
+    ep 350 | val_mse=0.271015
+    ep 400 | val_mse=0.269885
+    ep 450 | val_mse=0.269411
+    ep 500 | val_mse=0.269291
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=5,226 | pred_len=32 | ar_steps=1 | 评估窗口数=153
+    ✅ MSE=0.206196 | MAE=0.364642 (基于153个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.503651
+    ep   2 | val_freq_mse=1.331432
+    ep   3 | val_freq_mse=1.162924
+    ep  30 | val_freq_mse=0.965775
+    ep  60 | val_freq_mse=0.954065
+    ep  90 | val_freq_mse=0.950368
+    ep 120 | val_freq_mse=0.945989
+    ep 150 | val_freq_mse=0.943738
+    ep 180 | val_freq_mse=0.942675
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=8.898968
+    ep   2 | val_mse=8.681581
+    ep   3 | val_mse=8.467503
+    ep  50 | val_mse=2.013672
+    ep 100 | val_mse=0.321595
+    ep 150 | val_mse=0.278926
+    ep 200 | val_mse=0.275425
+    ep 250 | val_mse=0.273041
+    ep 300 | val_mse=0.271263
+    ep 350 | val_mse=0.270209
+    ep 400 | val_mse=0.269601
+    ep 450 | val_mse=0.269345
+    ep 500 | val_mse=0.269265
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=5,226 | pred_len=32 | ar_steps=1 | 评估窗口数=153
+    ✅ MSE=0.175577 | MAE=0.342416 (基于153个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=8.92483 | lyap=0.00198 | val=8.80987 | ρ(K)=0.6932
+    ep   2 | pred=8.69639 | lyap=0.00198 | val=8.60302 | ρ(K)=0.6932
+    ep   3 | pred=8.56233 | lyap=0.00198 | val=8.40033 | ρ(K)=0.6932
+    ep  50 | pred=2.38696 | lyap=0.00198 | val=2.34152 | ρ(K)=0.6942
+    ep 100 | pred=0.51347 | lyap=0.00197 | val=0.49294 | ρ(K)=0.6962
+    ep 150 | pred=0.28264 | lyap=0.00197 | val=0.27722 | ρ(K)=0.6968
+    ep 200 | pred=0.28474 | lyap=0.00197 | val=0.27291 | ρ(K)=0.6968
+    ep 250 | pred=0.28021 | lyap=0.00197 | val=0.27044 | ρ(K)=0.6967
+    ep 300 | pred=0.27640 | lyap=0.00197 | val=0.26880 | ρ(K)=0.6967
+    ep 350 | pred=0.26552 | lyap=0.00197 | val=0.26774 | ρ(K)=0.6966
+    ep 400 | pred=0.27498 | lyap=0.00197 | val=0.26716 | ρ(K)=0.6966
+    ep 450 | pred=0.26478 | lyap=0.00197 | val=0.26694 | ρ(K)=0.6966
+    ep 500 | pred=0.27902 | lyap=0.00197 | val=0.26687 | ρ(K)=0.6966
+    ✅ 完成 | best_val=0.266871 | ρ(K)=0.696607 | σ∈[0.6864,0.7032]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=5,226 | pred_len=32 | ar_steps=1 | 评估窗口数=153
+    ✅ MSE=0.174588 | MAE=0.340577 (基于153个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTh1 | pred_len=32 (ar_steps=1) 消融结果:
+    A_Scratch            MSE=0.199874  MAE=0.356179  -20.5%
+    B_JEPA               MSE=0.251492  MAE=0.396044  (基准)
+    C_Direct             MSE=0.206196  MAE=0.364642  -18.0%
+    D_Decoupled          MSE=0.175577  MAE=0.342416  -30.2%
+    E_KoopProp           MSE=0.174588  MAE=0.340577  -30.6%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTh1 | pred_len=192 | ar_steps=6
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTh1 | pred_len=192 (ar_steps=6)
+  train=10,191 | val=1,132 | test可用步数=153 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=36.150504
+    ep   2 | val_mse=35.309685
+    ep   3 | val_mse=34.487356
+    ep  50 | val_mse=9.902394
+    ep 100 | val_mse=1.923487
+    ep 150 | val_mse=0.504281
+    ep 200 | val_mse=0.286982
+    ep 250 | val_mse=0.263898
+    ep 300 | val_mse=0.254361
+    ep 350 | val_mse=0.248954
+    ep 400 | val_mse=0.246278
+    ep 450 | val_mse=0.245154
+    ep 500 | val_mse=0.244860
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=5,226 | pred_len=192 | ar_steps=6 | 评估窗口数=25
+    ✅ MSE=0.278823 | MAE=0.421016 (基于25个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.362958
+    ep   2 | val_mse=27.668174
+    ep   3 | val_mse=26.988489
+    ep  50 | val_mse=7.172081
+    ep 100 | val_mse=1.166043
+    ep 150 | val_mse=0.307776
+    ep 200 | val_mse=0.289002
+    ep 250 | val_mse=0.283659
+    ep 300 | val_mse=0.280187
+    ep 350 | val_mse=0.277995
+    ep 400 | val_mse=0.276843
+    ep 450 | val_mse=0.276353
+    ep 500 | val_mse=0.276223
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=5,226 | pred_len=192 | ar_steps=6 | 评估窗口数=25
+    ✅ MSE=0.378726 | MAE=0.477625 (基于25个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.608422
+    ep   2 | val_freq_mse=1.346379
+    ep   3 | val_freq_mse=1.141214
+    ep  30 | val_freq_mse=0.946476
+    ep  60 | val_freq_mse=0.936416
+    ep  90 | val_freq_mse=0.915845
+    ep 120 | val_freq_mse=0.911056
+    ep 150 | val_freq_mse=0.910293
+    ep 180 | val_freq_mse=0.908551
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=29.002266
+    ep   2 | val_mse=28.287024
+    ep   3 | val_mse=27.581694
+    ep  50 | val_mse=6.613592
+    ep 100 | val_mse=0.814795
+    ep 150 | val_mse=0.288469
+    ep 200 | val_mse=0.280891
+    ep 250 | val_mse=0.276274
+    ep 300 | val_mse=0.273000
+    ep 350 | val_mse=0.271015
+    ep 400 | val_mse=0.269885
+    ep 450 | val_mse=0.269411
+    ep 500 | val_mse=0.269291
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=5,226 | pred_len=192 | ar_steps=6 | 评估窗口数=25
+    ✅ MSE=0.354438 | MAE=0.465004 (基于25个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.503651
+    ep   2 | val_freq_mse=1.331432
+    ep   3 | val_freq_mse=1.162924
+    ep  30 | val_freq_mse=0.965775
+    ep  60 | val_freq_mse=0.954065
+    ep  90 | val_freq_mse=0.950368
+    ep 120 | val_freq_mse=0.945989
+    ep 150 | val_freq_mse=0.943738
+    ep 180 | val_freq_mse=0.942675
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=8.898968
+    ep   2 | val_mse=8.681581
+    ep   3 | val_mse=8.467503
+    ep  50 | val_mse=2.013672
+    ep 100 | val_mse=0.321595
+    ep 150 | val_mse=0.278926
+    ep 200 | val_mse=0.275425
+    ep 250 | val_mse=0.273041
+    ep 300 | val_mse=0.271263
+    ep 350 | val_mse=0.270209
+    ep 400 | val_mse=0.269601
+    ep 450 | val_mse=0.269345
+    ep 500 | val_mse=0.269265
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=5,226 | pred_len=192 | ar_steps=6 | 评估窗口数=25
+    ✅ MSE=0.229667 | MAE=0.390469 (基于25个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=8.92483 | lyap=0.00198 | val=8.80987 | ρ(K)=0.6932
+    ep   2 | pred=8.69639 | lyap=0.00198 | val=8.60302 | ρ(K)=0.6932
+    ep   3 | pred=8.56233 | lyap=0.00198 | val=8.40033 | ρ(K)=0.6932
+    ep  50 | pred=2.38696 | lyap=0.00198 | val=2.34152 | ρ(K)=0.6942
+    ep 100 | pred=0.51347 | lyap=0.00197 | val=0.49294 | ρ(K)=0.6962
+    ep 150 | pred=0.28264 | lyap=0.00197 | val=0.27722 | ρ(K)=0.6968
+    ep 200 | pred=0.28474 | lyap=0.00197 | val=0.27291 | ρ(K)=0.6968
+    ep 250 | pred=0.28021 | lyap=0.00197 | val=0.27044 | ρ(K)=0.6967
+    ep 300 | pred=0.27640 | lyap=0.00197 | val=0.26880 | ρ(K)=0.6967
+    ep 350 | pred=0.26552 | lyap=0.00197 | val=0.26774 | ρ(K)=0.6966
+    ep 400 | pred=0.27498 | lyap=0.00197 | val=0.26716 | ρ(K)=0.6966
+    ep 450 | pred=0.26478 | lyap=0.00197 | val=0.26694 | ρ(K)=0.6966
+    ep 500 | pred=0.27902 | lyap=0.00197 | val=0.26687 | ρ(K)=0.6966
+    ✅ 完成 | best_val=0.266871 | ρ(K)=0.696607 | σ∈[0.6864,0.7032]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=5,226 | pred_len=192 | ar_steps=6 | 评估窗口数=25
+    ✅ MSE=0.234541 | MAE=0.395804 (基于25个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTh1 | pred_len=192 (ar_steps=6) 消融结果:
+    A_Scratch            MSE=0.278823  MAE=0.421016  -26.4%
+    B_JEPA               MSE=0.378726  MAE=0.477625  (基准)
+    C_Direct             MSE=0.354438  MAE=0.465004  -6.4%
+    D_Decoupled          MSE=0.229667  MAE=0.390469  -39.4%
+    E_KoopProp           MSE=0.234541  MAE=0.395804  -38.1%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTh1 | pred_len=336 | ar_steps=11
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTh1 | pred_len=336 (ar_steps=11)
+  train=10,191 | val=1,132 | test可用步数=153 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=36.150504
+    ep   2 | val_mse=35.309685
+    ep   3 | val_mse=34.487356
+    ep  50 | val_mse=9.902394
+    ep 100 | val_mse=1.923487
+    ep 150 | val_mse=0.504281
+    ep 200 | val_mse=0.286982
+    ep 250 | val_mse=0.263898
+    ep 300 | val_mse=0.254361
+    ep 350 | val_mse=0.248954
+    ep 400 | val_mse=0.246278
+    ep 450 | val_mse=0.245154
+    ep 500 | val_mse=0.244860
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=5,226 | pred_len=336 | ar_steps=11 | 评估窗口数=14
+    ✅ MSE=0.476877 | MAE=0.527383 (基于14个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.362958
+    ep   2 | val_mse=27.668174
+    ep   3 | val_mse=26.988489
+    ep  50 | val_mse=7.172081
+    ep 100 | val_mse=1.166043
+    ep 150 | val_mse=0.307776
+    ep 200 | val_mse=0.289002
+    ep 250 | val_mse=0.283659
+    ep 300 | val_mse=0.280187
+    ep 350 | val_mse=0.277995
+    ep 400 | val_mse=0.276843
+    ep 450 | val_mse=0.276353
+    ep 500 | val_mse=0.276223
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=5,226 | pred_len=336 | ar_steps=11 | 评估窗口数=14
+    ✅ MSE=0.931545 | MAE=0.689193 (基于14个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.608422
+    ep   2 | val_freq_mse=1.346379
+    ep   3 | val_freq_mse=1.141214
+    ep  30 | val_freq_mse=0.946476
+    ep  60 | val_freq_mse=0.936416
+    ep  90 | val_freq_mse=0.915845
+    ep 120 | val_freq_mse=0.911056
+    ep 150 | val_freq_mse=0.910293
+    ep 180 | val_freq_mse=0.908551
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=29.002266
+    ep   2 | val_mse=28.287024
+    ep   3 | val_mse=27.581694
+    ep  50 | val_mse=6.613592
+    ep 100 | val_mse=0.814795
+    ep 150 | val_mse=0.288469
+    ep 200 | val_mse=0.280891
+    ep 250 | val_mse=0.276274
+    ep 300 | val_mse=0.273000
+    ep 350 | val_mse=0.271015
+    ep 400 | val_mse=0.269885
+    ep 450 | val_mse=0.269411
+    ep 500 | val_mse=0.269291
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=5,226 | pred_len=336 | ar_steps=11 | 评估窗口数=14
+    ✅ MSE=0.802479 | MAE=0.653251 (基于14个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.503651
+    ep   2 | val_freq_mse=1.331432
+    ep   3 | val_freq_mse=1.162924
+    ep  30 | val_freq_mse=0.965775
+    ep  60 | val_freq_mse=0.954065
+    ep  90 | val_freq_mse=0.950368
+    ep 120 | val_freq_mse=0.945989
+    ep 150 | val_freq_mse=0.943738
+    ep 180 | val_freq_mse=0.942675
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=8.898968
+    ep   2 | val_mse=8.681581
+    ep   3 | val_mse=8.467503
+    ep  50 | val_mse=2.013672
+    ep 100 | val_mse=0.321595
+    ep 150 | val_mse=0.278926
+    ep 200 | val_mse=0.275425
+    ep 250 | val_mse=0.273041
+    ep 300 | val_mse=0.271263
+    ep 350 | val_mse=0.270209
+    ep 400 | val_mse=0.269601
+    ep 450 | val_mse=0.269345
+    ep 500 | val_mse=0.269265
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=5,226 | pred_len=336 | ar_steps=11 | 评估窗口数=14
+    ✅ MSE=0.293593 | MAE=0.434147 (基于14个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=8.92483 | lyap=0.00198 | val=8.80987 | ρ(K)=0.6932
+    ep   2 | pred=8.69639 | lyap=0.00198 | val=8.60302 | ρ(K)=0.6932
+    ep   3 | pred=8.56233 | lyap=0.00198 | val=8.40033 | ρ(K)=0.6932
+    ep  50 | pred=2.38696 | lyap=0.00198 | val=2.34152 | ρ(K)=0.6942
+    ep 100 | pred=0.51347 | lyap=0.00197 | val=0.49294 | ρ(K)=0.6962
+    ep 150 | pred=0.28264 | lyap=0.00197 | val=0.27722 | ρ(K)=0.6968
+    ep 200 | pred=0.28474 | lyap=0.00197 | val=0.27291 | ρ(K)=0.6968
+    ep 250 | pred=0.28021 | lyap=0.00197 | val=0.27044 | ρ(K)=0.6967
+    ep 300 | pred=0.27640 | lyap=0.00197 | val=0.26880 | ρ(K)=0.6967
+    ep 350 | pred=0.26552 | lyap=0.00197 | val=0.26774 | ρ(K)=0.6966
+    ep 400 | pred=0.27498 | lyap=0.00197 | val=0.26716 | ρ(K)=0.6966
+    ep 450 | pred=0.26478 | lyap=0.00197 | val=0.26694 | ρ(K)=0.6966
+    ep 500 | pred=0.27902 | lyap=0.00197 | val=0.26687 | ρ(K)=0.6966
+    ✅ 完成 | best_val=0.266871 | ρ(K)=0.696607 | σ∈[0.6864,0.7032]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=5,226 | pred_len=336 | ar_steps=11 | 评估窗口数=14
+    ✅ MSE=0.333455 | MAE=0.460843 (基于14个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTh1 | pred_len=336 (ar_steps=11) 消融结果:
+    A_Scratch            MSE=0.476877  MAE=0.527383  -48.8%
+    B_JEPA               MSE=0.931545  MAE=0.689193  (基准)
+    C_Direct             MSE=0.802479  MAE=0.653251  -13.9%
+    D_Decoupled          MSE=0.293593  MAE=0.434147  -68.5%
+    E_KoopProp           MSE=0.333455  MAE=0.460843  -64.2%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTh1 | pred_len=720 | ar_steps=23
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTh1 | pred_len=720 (ar_steps=23)
+  train=10,191 | val=1,132 | test可用步数=153 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=36.150504
+    ep   2 | val_mse=35.309685
+    ep   3 | val_mse=34.487356
+    ep  50 | val_mse=9.902394
+    ep 100 | val_mse=1.923487
+    ep 150 | val_mse=0.504281
+    ep 200 | val_mse=0.286982
+    ep 250 | val_mse=0.263898
+    ep 300 | val_mse=0.254361
+    ep 350 | val_mse=0.248954
+    ep 400 | val_mse=0.246278
+    ep 450 | val_mse=0.245154
+    ep 500 | val_mse=0.244860
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=5,226 | pred_len=720 | ar_steps=23 | 评估窗口数=6
+    ✅ MSE=2.653814 | MAE=1.122980 (基于6个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.362958
+    ep   2 | val_mse=27.668174
+    ep   3 | val_mse=26.988489
+    ep  50 | val_mse=7.172081
+    ep 100 | val_mse=1.166043
+    ep 150 | val_mse=0.307776
+    ep 200 | val_mse=0.289002
+    ep 250 | val_mse=0.283659
+    ep 300 | val_mse=0.280187
+    ep 350 | val_mse=0.277995
+    ep 400 | val_mse=0.276843
+    ep 450 | val_mse=0.276353
+    ep 500 | val_mse=0.276223
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=5,226 | pred_len=720 | ar_steps=23 | 评估窗口数=6
+    ✅ MSE=7.881168 | MAE=1.793944 (基于6个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.608422
+    ep   2 | val_freq_mse=1.346379
+    ep   3 | val_freq_mse=1.141214
+    ep  30 | val_freq_mse=0.946476
+    ep  60 | val_freq_mse=0.936416
+    ep  90 | val_freq_mse=0.915845
+    ep 120 | val_freq_mse=0.911056
+    ep 150 | val_freq_mse=0.910293
+    ep 180 | val_freq_mse=0.908551
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=29.002266
+    ep   2 | val_mse=28.287024
+    ep   3 | val_mse=27.581694
+    ep  50 | val_mse=6.613592
+    ep 100 | val_mse=0.814795
+    ep 150 | val_mse=0.288469
+    ep 200 | val_mse=0.280891
+    ep 250 | val_mse=0.276274
+    ep 300 | val_mse=0.273000
+    ep 350 | val_mse=0.271015
+    ep 400 | val_mse=0.269885
+    ep 450 | val_mse=0.269411
+    ep 500 | val_mse=0.269291
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=5,226 | pred_len=720 | ar_steps=23 | 评估窗口数=6
+    ✅ MSE=5.351034 | MAE=1.484802 (基于6个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.503651
+    ep   2 | val_freq_mse=1.331432
+    ep   3 | val_freq_mse=1.162924
+    ep  30 | val_freq_mse=0.965775
+    ep  60 | val_freq_mse=0.954065
+    ep  90 | val_freq_mse=0.950368
+    ep 120 | val_freq_mse=0.945989
+    ep 150 | val_freq_mse=0.943738
+    ep 180 | val_freq_mse=0.942675
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=8.898968
+    ep   2 | val_mse=8.681581
+    ep   3 | val_mse=8.467503
+    ep  50 | val_mse=2.013672
+    ep 100 | val_mse=0.321595
+    ep 150 | val_mse=0.278926
+    ep 200 | val_mse=0.275425
+    ep 250 | val_mse=0.273041
+    ep 300 | val_mse=0.271263
+    ep 350 | val_mse=0.270209
+    ep 400 | val_mse=0.269601
+    ep 450 | val_mse=0.269345
+    ep 500 | val_mse=0.269265
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=5,226 | pred_len=720 | ar_steps=23 | 评估窗口数=6
+    ✅ MSE=0.610546 | MAE=0.599335 (基于6个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=8.92483 | lyap=0.00198 | val=8.80987 | ρ(K)=0.6932
+    ep   2 | pred=8.69639 | lyap=0.00198 | val=8.60302 | ρ(K)=0.6932
+    ep   3 | pred=8.56233 | lyap=0.00198 | val=8.40033 | ρ(K)=0.6932
+    ep  50 | pred=2.38696 | lyap=0.00198 | val=2.34152 | ρ(K)=0.6942
+    ep 100 | pred=0.51347 | lyap=0.00197 | val=0.49294 | ρ(K)=0.6962
+    ep 150 | pred=0.28264 | lyap=0.00197 | val=0.27722 | ρ(K)=0.6968
+    ep 200 | pred=0.28474 | lyap=0.00197 | val=0.27291 | ρ(K)=0.6968
+    ep 250 | pred=0.28021 | lyap=0.00197 | val=0.27044 | ρ(K)=0.6967
+    ep 300 | pred=0.27640 | lyap=0.00197 | val=0.26880 | ρ(K)=0.6967
+    ep 350 | pred=0.26552 | lyap=0.00197 | val=0.26774 | ρ(K)=0.6966
+    ep 400 | pred=0.27498 | lyap=0.00197 | val=0.26716 | ρ(K)=0.6966
+    ep 450 | pred=0.26478 | lyap=0.00197 | val=0.26694 | ρ(K)=0.6966
+    ep 500 | pred=0.27902 | lyap=0.00197 | val=0.26687 | ρ(K)=0.6966
+    ✅ 完成 | best_val=0.266871 | ρ(K)=0.696607 | σ∈[0.6864,0.7032]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=5,226 | pred_len=720 | ar_steps=23 | 评估窗口数=6
+    ✅ MSE=0.749602 | MAE=0.641343 (基于6个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTh1 | pred_len=720 (ar_steps=23) 消融结果:
+    A_Scratch            MSE=2.653814  MAE=1.122980  -66.3%
+    B_JEPA               MSE=7.881168  MAE=1.793944  (基准)
+    C_Direct             MSE=5.351034  MAE=1.484802  -32.1%
+    D_Decoupled          MSE=0.610546  MAE=0.599335  -92.3%
+    E_KoopProp           MSE=0.749602  MAE=0.641343  -90.5%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTm1 | pred_len=96 | ar_steps=3
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTm1 | pred_len=96 (ar_steps=3)
+  train=40,763 | val=4,529 | test可用步数=643 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=34.090713
+    ep   2 | val_mse=30.810407
+    ep   3 | val_mse=27.789028
+    ep  50 | val_mse=0.218475
+    ep 100 | val_mse=0.168728
+    ep 150 | val_mse=0.155742
+    ep 200 | val_mse=0.149047
+    ep 250 | val_mse=0.144676
+    ep 300 | val_mse=0.141724
+    ep 350 | val_mse=0.139968
+    ep 400 | val_mse=0.139006
+    ep 450 | val_mse=0.138607
+    ep 500 | val_mse=0.138497
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=20,904 | pred_len=96 | ar_steps=3 | 评估窗口数=214
+    ✅ MSE=0.113378 | MAE=0.261039 (基于214个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=26.933461
+    ep   2 | val_mse=24.193943
+    ep   3 | val_mse=21.677611
+    ep  50 | val_mse=0.256795
+    ep 100 | val_mse=0.222535
+    ep 150 | val_mse=0.200296
+    ep 200 | val_mse=0.185962
+    ep 250 | val_mse=0.176742
+    ep 300 | val_mse=0.170974
+    ep 350 | val_mse=0.167616
+    ep 400 | val_mse=0.165872
+    ep 450 | val_mse=0.165172
+    ep 500 | val_mse=0.164979
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=20,904 | pred_len=96 | ar_steps=3 | 评估窗口数=214
+    ✅ MSE=0.104578 | MAE=0.254699 (基于214个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.137212
+    ep   2 | val_freq_mse=1.005395
+    ep   3 | val_freq_mse=0.991734
+    ep  30 | val_freq_mse=0.994203
+    ep  60 | val_freq_mse=0.986028
+    ep  90 | val_freq_mse=0.974067
+    ep 120 | val_freq_mse=0.970647
+    ep 150 | val_freq_mse=0.966731
+    ep 180 | val_freq_mse=0.966623
+    [早停] ep=183 | best=0.966095
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=34.406855
+    ep   2 | val_mse=31.287607
+    ep   3 | val_mse=28.394807
+    ep  50 | val_mse=0.267420
+    ep 100 | val_mse=0.236249
+    ep 150 | val_mse=0.215661
+    ep 200 | val_mse=0.201729
+    ep 250 | val_mse=0.192490
+    ep 300 | val_mse=0.186607
+    ep 350 | val_mse=0.183084
+    ep 400 | val_mse=0.181152
+    ep 450 | val_mse=0.180380
+    ep 500 | val_mse=0.180164
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=20,904 | pred_len=96 | ar_steps=3 | 评估窗口数=214
+    ✅ MSE=0.117917 | MAE=0.272577 (基于214个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.334286
+    ep   2 | val_freq_mse=1.043231
+    ep   3 | val_freq_mse=1.026755
+    ep  30 | val_freq_mse=1.015441
+    ep  60 | val_freq_mse=1.014094
+    ep  90 | val_freq_mse=0.998620
+    ep 120 | val_freq_mse=0.998806
+    ep 150 | val_freq_mse=0.996708
+    [早停] ep=168 | best=0.996260
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=8.431041
+    ep   2 | val_mse=7.574649
+    ep   3 | val_mse=6.790914
+    ep  50 | val_mse=0.254704
+    ep 100 | val_mse=0.239463
+    ep 150 | val_mse=0.227481
+    ep 200 | val_mse=0.218314
+    ep 250 | val_mse=0.211486
+    ep 300 | val_mse=0.206756
+    ep 350 | val_mse=0.203817
+    ep 400 | val_mse=0.202209
+    ep 450 | val_mse=0.201525
+    ep 500 | val_mse=0.201344
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=20,904 | pred_len=96 | ar_steps=3 | 评估窗口数=214
+    ✅ MSE=0.093717 | MAE=0.245166 (基于214个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=11.04498 | lyap=0.00198 | val=10.51795 | ρ(K)=0.6931
+    ep   2 | pred=10.05743 | lyap=0.00198 | val=9.56604 | ρ(K)=0.6930
+    ep   3 | pred=9.14558 | lyap=0.00198 | val=8.68784 | ρ(K)=0.6929
+    ep  50 | pred=0.25918 | lyap=0.00197 | val=0.25761 | ρ(K)=0.6984
+    ep 100 | pred=0.24135 | lyap=0.00197 | val=0.24179 | ρ(K)=0.6978
+    ep 150 | pred=0.22903 | lyap=0.00196 | val=0.22936 | ρ(K)=0.6976
+    ep 200 | pred=0.21993 | lyap=0.00196 | val=0.21976 | ρ(K)=0.6981
+    ep 250 | pred=0.21456 | lyap=0.00195 | val=0.21272 | ρ(K)=0.6986
+    ep 300 | pred=0.20598 | lyap=0.00195 | val=0.20795 | ρ(K)=0.6990
+    ep 350 | pred=0.20420 | lyap=0.00195 | val=0.20490 | ρ(K)=0.6993
+    ep 400 | pred=0.19923 | lyap=0.00195 | val=0.20326 | ρ(K)=0.6995
+    ep 450 | pred=0.20159 | lyap=0.00195 | val=0.20257 | ρ(K)=0.6995
+    ep 500 | pred=0.20359 | lyap=0.00195 | val=0.20238 | ρ(K)=0.6996
+    ✅ 完成 | best_val=0.202379 | ρ(K)=0.699553 | σ∈[0.6837,0.7077]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=20,904 | pred_len=96 | ar_steps=3 | 评估窗口数=214
+    ✅ MSE=0.102323 | MAE=0.257782 (基于214个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTm1 | pred_len=96 (ar_steps=3) 消融结果:
+    A_Scratch            MSE=0.113378  MAE=0.261039  +8.4%
+    B_JEPA               MSE=0.104578  MAE=0.254699  (基准)
+    C_Direct             MSE=0.117917  MAE=0.272577  +12.8%
+    D_Decoupled          MSE=0.093717  MAE=0.245166  -10.4%
+    E_KoopProp           MSE=0.102323  MAE=0.257782  -2.2%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTm1 | pred_len=32 | ar_steps=1
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTm1 | pred_len=32 (ar_steps=1)
+  train=40,763 | val=4,529 | test可用步数=643 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=34.090713
+    ep   2 | val_mse=30.810407
+    ep   3 | val_mse=27.789028
+    ep  50 | val_mse=0.218475
+    ep 100 | val_mse=0.168728
+    ep 150 | val_mse=0.155742
+    ep 200 | val_mse=0.149047
+    ep 250 | val_mse=0.144676
+    ep 300 | val_mse=0.141724
+    ep 350 | val_mse=0.139968
+    ep 400 | val_mse=0.139006
+    ep 450 | val_mse=0.138607
+    ep 500 | val_mse=0.138497
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=20,904 | pred_len=32 | ar_steps=1 | 评估窗口数=643
+    ✅ MSE=0.096765 | MAE=0.238823 (基于643个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=26.933461
+    ep   2 | val_mse=24.193943
+    ep   3 | val_mse=21.677611
+    ep  50 | val_mse=0.256795
+    ep 100 | val_mse=0.222535
+    ep 150 | val_mse=0.200296
+    ep 200 | val_mse=0.185962
+    ep 250 | val_mse=0.176742
+    ep 300 | val_mse=0.170974
+    ep 350 | val_mse=0.167616
+    ep 400 | val_mse=0.165872
+    ep 450 | val_mse=0.165172
+    ep 500 | val_mse=0.164979
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=20,904 | pred_len=32 | ar_steps=1 | 评估窗口数=643
+    ✅ MSE=0.084403 | MAE=0.228138 (基于643个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.137212
+    ep   2 | val_freq_mse=1.005395
+    ep   3 | val_freq_mse=0.991734
+    ep  30 | val_freq_mse=0.994203
+    ep  60 | val_freq_mse=0.986028
+    ep  90 | val_freq_mse=0.974067
+    ep 120 | val_freq_mse=0.970647
+    ep 150 | val_freq_mse=0.966731
+    ep 180 | val_freq_mse=0.966623
+    [早停] ep=183 | best=0.966095
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=34.406855
+    ep   2 | val_mse=31.287607
+    ep   3 | val_mse=28.394807
+    ep  50 | val_mse=0.267420
+    ep 100 | val_mse=0.236249
+    ep 150 | val_mse=0.215661
+    ep 200 | val_mse=0.201729
+    ep 250 | val_mse=0.192490
+    ep 300 | val_mse=0.186607
+    ep 350 | val_mse=0.183084
+    ep 400 | val_mse=0.181152
+    ep 450 | val_mse=0.180380
+    ep 500 | val_mse=0.180164
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=20,904 | pred_len=32 | ar_steps=1 | 评估窗口数=643
+    ✅ MSE=0.107283 | MAE=0.257661 (基于643个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.334286
+    ep   2 | val_freq_mse=1.043231
+    ep   3 | val_freq_mse=1.026755
+    ep  30 | val_freq_mse=1.015441
+    ep  60 | val_freq_mse=1.014094
+    ep  90 | val_freq_mse=0.998620
+    ep 120 | val_freq_mse=0.998806
+    ep 150 | val_freq_mse=0.996708
+    [早停] ep=168 | best=0.996260
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=8.431041
+    ep   2 | val_mse=7.574649
+    ep   3 | val_mse=6.790914
+    ep  50 | val_mse=0.254704
+    ep 100 | val_mse=0.239463
+    ep 150 | val_mse=0.227481
+    ep 200 | val_mse=0.218314
+    ep 250 | val_mse=0.211486
+    ep 300 | val_mse=0.206756
+    ep 350 | val_mse=0.203817
+    ep 400 | val_mse=0.202209
+    ep 450 | val_mse=0.201525
+    ep 500 | val_mse=0.201344
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=20,904 | pred_len=32 | ar_steps=1 | 评估窗口数=643
+    ✅ MSE=0.081904 | MAE=0.227173 (基于643个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=11.04498 | lyap=0.00198 | val=10.51795 | ρ(K)=0.6931
+    ep   2 | pred=10.05743 | lyap=0.00198 | val=9.56604 | ρ(K)=0.6930
+    ep   3 | pred=9.14558 | lyap=0.00198 | val=8.68784 | ρ(K)=0.6929
+    ep  50 | pred=0.25918 | lyap=0.00197 | val=0.25761 | ρ(K)=0.6984
+    ep 100 | pred=0.24135 | lyap=0.00197 | val=0.24179 | ρ(K)=0.6978
+    ep 150 | pred=0.22903 | lyap=0.00196 | val=0.22936 | ρ(K)=0.6976
+    ep 200 | pred=0.21993 | lyap=0.00196 | val=0.21976 | ρ(K)=0.6981
+    ep 250 | pred=0.21456 | lyap=0.00195 | val=0.21272 | ρ(K)=0.6986
+    ep 300 | pred=0.20598 | lyap=0.00195 | val=0.20795 | ρ(K)=0.6990
+    ep 350 | pred=0.20420 | lyap=0.00195 | val=0.20490 | ρ(K)=0.6993
+    ep 400 | pred=0.19923 | lyap=0.00195 | val=0.20326 | ρ(K)=0.6995
+    ep 450 | pred=0.20159 | lyap=0.00195 | val=0.20257 | ρ(K)=0.6995
+    ep 500 | pred=0.20359 | lyap=0.00195 | val=0.20238 | ρ(K)=0.6996
+    ✅ 完成 | best_val=0.202379 | ρ(K)=0.699553 | σ∈[0.6837,0.7077]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=20,904 | pred_len=32 | ar_steps=1 | 评估窗口数=643
+    ✅ MSE=0.090199 | MAE=0.240100 (基于643个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTm1 | pred_len=32 (ar_steps=1) 消融结果:
+    A_Scratch            MSE=0.096765  MAE=0.238823  +14.6%
+    B_JEPA               MSE=0.084403  MAE=0.228138  (基准)
+    C_Direct             MSE=0.107283  MAE=0.257661  +27.1%
+    D_Decoupled          MSE=0.081904  MAE=0.227173  -3.0%
+    E_KoopProp           MSE=0.090199  MAE=0.240100  +6.9%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTm1 | pred_len=192 | ar_steps=6
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTm1 | pred_len=192 (ar_steps=6)
+  train=40,763 | val=4,529 | test可用步数=643 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=34.090713
+    ep   2 | val_mse=30.810407
+    ep   3 | val_mse=27.789028
+    ep  50 | val_mse=0.218475
+    ep 100 | val_mse=0.168728
+    ep 150 | val_mse=0.155742
+    ep 200 | val_mse=0.149047
+    ep 250 | val_mse=0.144676
+    ep 300 | val_mse=0.141724
+    ep 350 | val_mse=0.139968
+    ep 400 | val_mse=0.139006
+    ep 450 | val_mse=0.138607
+    ep 500 | val_mse=0.138497
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=20,904 | pred_len=192 | ar_steps=6 | 评估窗口数=107
+    ✅ MSE=0.149504 | MAE=0.301147 (基于107个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=26.933461
+    ep   2 | val_mse=24.193943
+    ep   3 | val_mse=21.677611
+    ep  50 | val_mse=0.256795
+    ep 100 | val_mse=0.222535
+    ep 150 | val_mse=0.200296
+    ep 200 | val_mse=0.185962
+    ep 250 | val_mse=0.176742
+    ep 300 | val_mse=0.170974
+    ep 350 | val_mse=0.167616
+    ep 400 | val_mse=0.165872
+    ep 450 | val_mse=0.165172
+    ep 500 | val_mse=0.164979
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=20,904 | pred_len=192 | ar_steps=6 | 评估窗口数=107
+    ✅ MSE=0.179008 | MAE=0.323752 (基于107个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.137212
+    ep   2 | val_freq_mse=1.005395
+    ep   3 | val_freq_mse=0.991734
+    ep  30 | val_freq_mse=0.994203
+    ep  60 | val_freq_mse=0.986028
+    ep  90 | val_freq_mse=0.974067
+    ep 120 | val_freq_mse=0.970647
+    ep 150 | val_freq_mse=0.966731
+    ep 180 | val_freq_mse=0.966623
+    [早停] ep=183 | best=0.966095
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=34.406855
+    ep   2 | val_mse=31.287607
+    ep   3 | val_mse=28.394807
+    ep  50 | val_mse=0.267420
+    ep 100 | val_mse=0.236249
+    ep 150 | val_mse=0.215661
+    ep 200 | val_mse=0.201729
+    ep 250 | val_mse=0.192490
+    ep 300 | val_mse=0.186607
+    ep 350 | val_mse=0.183084
+    ep 400 | val_mse=0.181152
+    ep 450 | val_mse=0.180380
+    ep 500 | val_mse=0.180164
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=20,904 | pred_len=192 | ar_steps=6 | 评估窗口数=107
+    ✅ MSE=0.141817 | MAE=0.300167 (基于107个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.334286
+    ep   2 | val_freq_mse=1.043231
+    ep   3 | val_freq_mse=1.026755
+    ep  30 | val_freq_mse=1.015441
+    ep  60 | val_freq_mse=1.014094
+    ep  90 | val_freq_mse=0.998620
+    ep 120 | val_freq_mse=0.998806
+    ep 150 | val_freq_mse=0.996708
+    [早停] ep=168 | best=0.996260
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=8.431041
+    ep   2 | val_mse=7.574649
+    ep   3 | val_mse=6.790914
+    ep  50 | val_mse=0.254704
+    ep 100 | val_mse=0.239463
+    ep 150 | val_mse=0.227481
+    ep 200 | val_mse=0.218314
+    ep 250 | val_mse=0.211486
+    ep 300 | val_mse=0.206756
+    ep 350 | val_mse=0.203817
+    ep 400 | val_mse=0.202209
+    ep 450 | val_mse=0.201525
+    ep 500 | val_mse=0.201344
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=20,904 | pred_len=192 | ar_steps=6 | 评估窗口数=107
+    ✅ MSE=0.108725 | MAE=0.263421 (基于107个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=11.04498 | lyap=0.00198 | val=10.51795 | ρ(K)=0.6931
+    ep   2 | pred=10.05743 | lyap=0.00198 | val=9.56604 | ρ(K)=0.6930
+    ep   3 | pred=9.14558 | lyap=0.00198 | val=8.68784 | ρ(K)=0.6929
+    ep  50 | pred=0.25918 | lyap=0.00197 | val=0.25761 | ρ(K)=0.6984
+    ep 100 | pred=0.24135 | lyap=0.00197 | val=0.24179 | ρ(K)=0.6978
+    ep 150 | pred=0.22903 | lyap=0.00196 | val=0.22936 | ρ(K)=0.6976
+    ep 200 | pred=0.21993 | lyap=0.00196 | val=0.21976 | ρ(K)=0.6981
+    ep 250 | pred=0.21456 | lyap=0.00195 | val=0.21272 | ρ(K)=0.6986
+    ep 300 | pred=0.20598 | lyap=0.00195 | val=0.20795 | ρ(K)=0.6990
+    ep 350 | pred=0.20420 | lyap=0.00195 | val=0.20490 | ρ(K)=0.6993
+    ep 400 | pred=0.19923 | lyap=0.00195 | val=0.20326 | ρ(K)=0.6995
+    ep 450 | pred=0.20159 | lyap=0.00195 | val=0.20257 | ρ(K)=0.6995
+    ep 500 | pred=0.20359 | lyap=0.00195 | val=0.20238 | ρ(K)=0.6996
+    ✅ 完成 | best_val=0.202379 | ρ(K)=0.699553 | σ∈[0.6837,0.7077]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=20,904 | pred_len=192 | ar_steps=6 | 评估窗口数=107
+    ✅ MSE=0.118950 | MAE=0.277057 (基于107个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTm1 | pred_len=192 (ar_steps=6) 消融结果:
+    A_Scratch            MSE=0.149504  MAE=0.301147  -16.5%
+    B_JEPA               MSE=0.179008  MAE=0.323752  (基准)
+    C_Direct             MSE=0.141817  MAE=0.300167  -20.8%
+    D_Decoupled          MSE=0.108725  MAE=0.263421  -39.3%
+    E_KoopProp           MSE=0.118950  MAE=0.277057  -33.6%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTm1 | pred_len=336 | ar_steps=11
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTm1 | pred_len=336 (ar_steps=11)
+  train=40,763 | val=4,529 | test可用步数=643 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=34.090713
+    ep   2 | val_mse=30.810407
+    ep   3 | val_mse=27.789028
+    ep  50 | val_mse=0.218475
+    ep 100 | val_mse=0.168728
+    ep 150 | val_mse=0.155742
+    ep 200 | val_mse=0.149047
+    ep 250 | val_mse=0.144676
+    ep 300 | val_mse=0.141724
+    ep 350 | val_mse=0.139968
+    ep 400 | val_mse=0.139006
+    ep 450 | val_mse=0.138607
+    ep 500 | val_mse=0.138497
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=20,904 | pred_len=336 | ar_steps=11 | 评估窗口数=61
+    ✅ MSE=0.265146 | MAE=0.386087 (基于61个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=26.933461
+    ep   2 | val_mse=24.193943
+    ep   3 | val_mse=21.677611
+    ep  50 | val_mse=0.256795
+    ep 100 | val_mse=0.222535
+    ep 150 | val_mse=0.200296
+    ep 200 | val_mse=0.185962
+    ep 250 | val_mse=0.176742
+    ep 300 | val_mse=0.170974
+    ep 350 | val_mse=0.167616
+    ep 400 | val_mse=0.165872
+    ep 450 | val_mse=0.165172
+    ep 500 | val_mse=0.164979
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=20,904 | pred_len=336 | ar_steps=11 | 评估窗口数=61
+    ✅ MSE=0.685600 | MAE=0.551194 (基于61个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.137212
+    ep   2 | val_freq_mse=1.005395
+    ep   3 | val_freq_mse=0.991734
+    ep  30 | val_freq_mse=0.994203
+    ep  60 | val_freq_mse=0.986028
+    ep  90 | val_freq_mse=0.974067
+    ep 120 | val_freq_mse=0.970647
+    ep 150 | val_freq_mse=0.966731
+    ep 180 | val_freq_mse=0.966623
+    [早停] ep=183 | best=0.966095
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=34.406855
+    ep   2 | val_mse=31.287607
+    ep   3 | val_mse=28.394807
+    ep  50 | val_mse=0.267420
+    ep 100 | val_mse=0.236249
+    ep 150 | val_mse=0.215661
+    ep 200 | val_mse=0.201729
+    ep 250 | val_mse=0.192490
+    ep 300 | val_mse=0.186607
+    ep 350 | val_mse=0.183084
+    ep 400 | val_mse=0.181152
+    ep 450 | val_mse=0.180380
+    ep 500 | val_mse=0.180164
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=20,904 | pred_len=336 | ar_steps=11 | 评估窗口数=61
+    ✅ MSE=0.264318 | MAE=0.384308 (基于61个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.334286
+    ep   2 | val_freq_mse=1.043231
+    ep   3 | val_freq_mse=1.026755
+    ep  30 | val_freq_mse=1.015441
+    ep  60 | val_freq_mse=1.014094
+    ep  90 | val_freq_mse=0.998620
+    ep 120 | val_freq_mse=0.998806
+    ep 150 | val_freq_mse=0.996708
+    [早停] ep=168 | best=0.996260
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=8.431041
+    ep   2 | val_mse=7.574649
+    ep   3 | val_mse=6.790914
+    ep  50 | val_mse=0.254704
+    ep 100 | val_mse=0.239463
+    ep 150 | val_mse=0.227481
+    ep 200 | val_mse=0.218314
+    ep 250 | val_mse=0.211486
+    ep 300 | val_mse=0.206756
+    ep 350 | val_mse=0.203817
+    ep 400 | val_mse=0.202209
+    ep 450 | val_mse=0.201525
+    ep 500 | val_mse=0.201344
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=20,904 | pred_len=336 | ar_steps=11 | 评估窗口数=61
+    ✅ MSE=0.136613 | MAE=0.291754 (基于61个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=11.04498 | lyap=0.00198 | val=10.51795 | ρ(K)=0.6931
+    ep   2 | pred=10.05743 | lyap=0.00198 | val=9.56604 | ρ(K)=0.6930
+    ep   3 | pred=9.14558 | lyap=0.00198 | val=8.68784 | ρ(K)=0.6929
+    ep  50 | pred=0.25918 | lyap=0.00197 | val=0.25761 | ρ(K)=0.6984
+    ep 100 | pred=0.24135 | lyap=0.00197 | val=0.24179 | ρ(K)=0.6978
+    ep 150 | pred=0.22903 | lyap=0.00196 | val=0.22936 | ρ(K)=0.6976
+    ep 200 | pred=0.21993 | lyap=0.00196 | val=0.21976 | ρ(K)=0.6981
+    ep 250 | pred=0.21456 | lyap=0.00195 | val=0.21272 | ρ(K)=0.6986
+    ep 300 | pred=0.20598 | lyap=0.00195 | val=0.20795 | ρ(K)=0.6990
+    ep 350 | pred=0.20420 | lyap=0.00195 | val=0.20490 | ρ(K)=0.6993
+    ep 400 | pred=0.19923 | lyap=0.00195 | val=0.20326 | ρ(K)=0.6995
+    ep 450 | pred=0.20159 | lyap=0.00195 | val=0.20257 | ρ(K)=0.6995
+    ep 500 | pred=0.20359 | lyap=0.00195 | val=0.20238 | ρ(K)=0.6996
+    ✅ 完成 | best_val=0.202379 | ρ(K)=0.699553 | σ∈[0.6837,0.7077]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=20,904 | pred_len=336 | ar_steps=11 | 评估窗口数=61
+    ✅ MSE=0.156862 | MAE=0.311447 (基于61个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTm1 | pred_len=336 (ar_steps=11) 消融结果:
+    A_Scratch            MSE=0.265146  MAE=0.386087  -61.3%
+    B_JEPA               MSE=0.685600  MAE=0.551194  (基准)
+    C_Direct             MSE=0.264318  MAE=0.384308  -61.4%
+    D_Decoupled          MSE=0.136613  MAE=0.291754  -80.1%
+    E_KoopProp           MSE=0.156862  MAE=0.311447  -77.1%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTm1 | pred_len=720 | ar_steps=23
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTm1 | pred_len=720 (ar_steps=23)
+  train=40,763 | val=4,529 | test可用步数=643 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=34.090713
+    ep   2 | val_mse=30.810407
+    ep   3 | val_mse=27.789028
+    ep  50 | val_mse=0.218475
+    ep 100 | val_mse=0.168728
+    ep 150 | val_mse=0.155742
+    ep 200 | val_mse=0.149047
+    ep 250 | val_mse=0.144676
+    ep 300 | val_mse=0.141724
+    ep 350 | val_mse=0.139968
+    ep 400 | val_mse=0.139006
+    ep 450 | val_mse=0.138607
+    ep 500 | val_mse=0.138497
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=20,904 | pred_len=720 | ar_steps=23 | 评估窗口数=28
+    ✅ MSE=2.762975 | MAE=1.020486 (基于28个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=26.933461
+    ep   2 | val_mse=24.193943
+    ep   3 | val_mse=21.677611
+    ep  50 | val_mse=0.256795
+    ep 100 | val_mse=0.222535
+    ep 150 | val_mse=0.200296
+    ep 200 | val_mse=0.185962
+    ep 250 | val_mse=0.176742
+    ep 300 | val_mse=0.170974
+    ep 350 | val_mse=0.167616
+    ep 400 | val_mse=0.165872
+    ep 450 | val_mse=0.165172
+    ep 500 | val_mse=0.164979
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=20,904 | pred_len=720 | ar_steps=23 | 评估窗口数=28
+    ✅ MSE=4.539692 | MAE=1.389163 (基于28个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.137212
+    ep   2 | val_freq_mse=1.005395
+    ep   3 | val_freq_mse=0.991734
+    ep  30 | val_freq_mse=0.994203
+    ep  60 | val_freq_mse=0.986028
+    ep  90 | val_freq_mse=0.974067
+    ep 120 | val_freq_mse=0.970647
+    ep 150 | val_freq_mse=0.966731
+    ep 180 | val_freq_mse=0.966623
+    [早停] ep=183 | best=0.966095
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=34.406855
+    ep   2 | val_mse=31.287607
+    ep   3 | val_mse=28.394807
+    ep  50 | val_mse=0.267420
+    ep 100 | val_mse=0.236249
+    ep 150 | val_mse=0.215661
+    ep 200 | val_mse=0.201729
+    ep 250 | val_mse=0.192490
+    ep 300 | val_mse=0.186607
+    ep 350 | val_mse=0.183084
+    ep 400 | val_mse=0.181152
+    ep 450 | val_mse=0.180380
+    ep 500 | val_mse=0.180164
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=20,904 | pred_len=720 | ar_steps=23 | 评估窗口数=28
+    ✅ MSE=3.594316 | MAE=1.155376 (基于28个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.334286
+    ep   2 | val_freq_mse=1.043231
+    ep   3 | val_freq_mse=1.026755
+    ep  30 | val_freq_mse=1.015441
+    ep  60 | val_freq_mse=1.014094
+    ep  90 | val_freq_mse=0.998620
+    ep 120 | val_freq_mse=0.998806
+    ep 150 | val_freq_mse=0.996708
+    [早停] ep=168 | best=0.996260
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=8.431041
+    ep   2 | val_mse=7.574649
+    ep   3 | val_mse=6.790914
+    ep  50 | val_mse=0.254704
+    ep 100 | val_mse=0.239463
+    ep 150 | val_mse=0.227481
+    ep 200 | val_mse=0.218314
+    ep 250 | val_mse=0.211486
+    ep 300 | val_mse=0.206756
+    ep 350 | val_mse=0.203817
+    ep 400 | val_mse=0.202209
+    ep 450 | val_mse=0.201525
+    ep 500 | val_mse=0.201344
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=20,904 | pred_len=720 | ar_steps=23 | 评估窗口数=28
+    ✅ MSE=0.298423 | MAE=0.419135 (基于28个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=11.04498 | lyap=0.00198 | val=10.51795 | ρ(K)=0.6931
+    ep   2 | pred=10.05743 | lyap=0.00198 | val=9.56604 | ρ(K)=0.6930
+    ep   3 | pred=9.14558 | lyap=0.00198 | val=8.68784 | ρ(K)=0.6929
+    ep  50 | pred=0.25918 | lyap=0.00197 | val=0.25761 | ρ(K)=0.6984
+    ep 100 | pred=0.24135 | lyap=0.00197 | val=0.24179 | ρ(K)=0.6978
+    ep 150 | pred=0.22903 | lyap=0.00196 | val=0.22936 | ρ(K)=0.6976
+    ep 200 | pred=0.21993 | lyap=0.00196 | val=0.21976 | ρ(K)=0.6981
+    ep 250 | pred=0.21456 | lyap=0.00195 | val=0.21272 | ρ(K)=0.6986
+    ep 300 | pred=0.20598 | lyap=0.00195 | val=0.20795 | ρ(K)=0.6990
+    ep 350 | pred=0.20420 | lyap=0.00195 | val=0.20490 | ρ(K)=0.6993
+    ep 400 | pred=0.19923 | lyap=0.00195 | val=0.20326 | ρ(K)=0.6995
+    ep 450 | pred=0.20159 | lyap=0.00195 | val=0.20257 | ρ(K)=0.6995
+    ep 500 | pred=0.20359 | lyap=0.00195 | val=0.20238 | ρ(K)=0.6996
+    ✅ 完成 | best_val=0.202379 | ρ(K)=0.699553 | σ∈[0.6837,0.7077]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=20,904 | pred_len=720 | ar_steps=23 | 评估窗口数=28
+    ✅ MSE=0.558771 | MAE=0.542670 (基于28个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTm1 | pred_len=720 (ar_steps=23) 消融结果:
+    A_Scratch            MSE=2.762975  MAE=1.020486  -39.1%
+    B_JEPA               MSE=4.539692  MAE=1.389163  (基准)
+    C_Direct             MSE=3.594316  MAE=1.155376  -20.8%
+    D_Decoupled          MSE=0.298423  MAE=0.419135  -93.4%
+    E_KoopProp           MSE=0.558771  MAE=0.542670  -87.7%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTh2 | pred_len=96 | ar_steps=3
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTh2 | pred_len=96 (ar_steps=3)
+  train=10,191 | val=1,132 | test可用步数=153 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=35.655023
+    ep   2 | val_mse=34.851096
+    ep   3 | val_mse=34.063624
+    ep  50 | val_mse=10.147346
+    ep 100 | val_mse=2.008473
+    ep 150 | val_mse=0.482827
+    ep 200 | val_mse=0.307980
+    ep 250 | val_mse=0.299841
+    ep 300 | val_mse=0.295883
+    ep 350 | val_mse=0.293487
+    ep 400 | val_mse=0.292291
+    ep 450 | val_mse=0.291762
+    ep 500 | val_mse=0.291634
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=5,226 | pred_len=96 | ar_steps=3 | 评估窗口数=51
+    ✅ MSE=0.393163 | MAE=0.498515 (基于51个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.697510
+    ep   2 | val_mse=28.041139
+    ep   3 | val_mse=27.397574
+    ep  50 | val_mse=7.773774
+    ep 100 | val_mse=1.355709
+    ep 150 | val_mse=0.318004
+    ep 200 | val_mse=0.298312
+    ep 250 | val_mse=0.293434
+    ep 300 | val_mse=0.290224
+    ep 350 | val_mse=0.288230
+    ep 400 | val_mse=0.287211
+    ep 450 | val_mse=0.286747
+    ep 500 | val_mse=0.286625
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=5,226 | pred_len=96 | ar_steps=3 | 评估窗口数=51
+    ✅ MSE=0.371972 | MAE=0.486972 (基于51个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.354672
+    ep   2 | val_freq_mse=1.159511
+    ep   3 | val_freq_mse=1.042153
+    ep  30 | val_freq_mse=0.968070
+    ep  60 | val_freq_mse=0.936537
+    ep  90 | val_freq_mse=0.946533
+    ep 120 | val_freq_mse=0.925105
+    ep 150 | val_freq_mse=0.926159
+    [早停] ep=177 | best=0.920837
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=31.852243
+    ep   2 | val_mse=31.158263
+    ep   3 | val_mse=30.471278
+    ep  50 | val_mse=8.513219
+    ep 100 | val_mse=0.877441
+    ep 150 | val_mse=0.300946
+    ep 200 | val_mse=0.295110
+    ep 250 | val_mse=0.291382
+    ep 300 | val_mse=0.288566
+    ep 350 | val_mse=0.286899
+    ep 400 | val_mse=0.285997
+    ep 450 | val_mse=0.285588
+    ep 500 | val_mse=0.285496
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=5,226 | pred_len=96 | ar_steps=3 | 评估窗口数=51
+    ✅ MSE=0.354354 | MAE=0.474893 (基于51个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.716841
+    ep   2 | val_freq_mse=1.457152
+    ep   3 | val_freq_mse=1.174070
+    ep  30 | val_freq_mse=0.919353
+    ep  60 | val_freq_mse=0.919509
+    ep  90 | val_freq_mse=0.912789
+    ep 120 | val_freq_mse=0.910313
+    ep 150 | val_freq_mse=0.911235
+    [早停] ep=175 | best=0.907437
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=12.001690
+    ep   2 | val_mse=11.753132
+    ep   3 | val_mse=11.508204
+    ep  50 | val_mse=3.714582
+    ep 100 | val_mse=0.822901
+    ep 150 | val_mse=0.296209
+    ep 200 | val_mse=0.266594
+    ep 250 | val_mse=0.263957
+    ep 300 | val_mse=0.262435
+    ep 350 | val_mse=0.261442
+    ep 400 | val_mse=0.260978
+    ep 450 | val_mse=0.260741
+    ep 500 | val_mse=0.260680
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=5,226 | pred_len=96 | ar_steps=3 | 评估窗口数=51
+    ✅ MSE=0.318729 | MAE=0.450963 (基于51个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=9.75742 | lyap=0.00198 | val=9.59915 | ρ(K)=0.6931
+    ep   2 | pred=9.51973 | lyap=0.00198 | val=9.39305 | ρ(K)=0.6931
+    ep   3 | pred=9.31534 | lyap=0.00198 | val=9.18978 | ρ(K)=0.6931
+    ep  50 | pred=2.91686 | lyap=0.00198 | val=2.88493 | ρ(K)=0.6938
+    ep 100 | pred=0.64923 | lyap=0.00197 | val=0.63028 | ρ(K)=0.6954
+    ep 150 | pred=0.27125 | lyap=0.00197 | val=0.27001 | ρ(K)=0.6960
+    ep 200 | pred=0.26006 | lyap=0.00197 | val=0.26490 | ρ(K)=0.6961
+    ep 250 | pred=0.25819 | lyap=0.00197 | val=0.26265 | ρ(K)=0.6962
+    ep 300 | pred=0.25512 | lyap=0.00197 | val=0.26104 | ρ(K)=0.6963
+    ep 350 | pred=0.25614 | lyap=0.00197 | val=0.26001 | ρ(K)=0.6964
+    ep 400 | pred=0.26520 | lyap=0.00197 | val=0.25949 | ρ(K)=0.6964
+    ep 450 | pred=0.26046 | lyap=0.00197 | val=0.25927 | ρ(K)=0.6964
+    ep 500 | pred=0.25557 | lyap=0.00197 | val=0.25921 | ρ(K)=0.6964
+    ✅ 完成 | best_val=0.259211 | ρ(K)=0.696437 | σ∈[0.6868,0.7031]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=5,226 | pred_len=96 | ar_steps=3 | 评估窗口数=51
+    ✅ MSE=0.325893 | MAE=0.456409 (基于51个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTh2 | pred_len=96 (ar_steps=3) 消融结果:
+    A_Scratch            MSE=0.393163  MAE=0.498515  +5.7%
+    B_JEPA               MSE=0.371972  MAE=0.486972  (基准)
+    C_Direct             MSE=0.354354  MAE=0.474893  -4.7%
+    D_Decoupled          MSE=0.318729  MAE=0.450963  -14.3%
+    E_KoopProp           MSE=0.325893  MAE=0.456409  -12.4%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTh2 | pred_len=32 | ar_steps=1
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTh2 | pred_len=32 (ar_steps=1)
+  train=10,191 | val=1,132 | test可用步数=153 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=35.655023
+    ep   2 | val_mse=34.851096
+    ep   3 | val_mse=34.063624
+    ep  50 | val_mse=10.147346
+    ep 100 | val_mse=2.008473
+    ep 150 | val_mse=0.482827
+    ep 200 | val_mse=0.307980
+    ep 250 | val_mse=0.299841
+    ep 300 | val_mse=0.295883
+    ep 350 | val_mse=0.293487
+    ep 400 | val_mse=0.292291
+    ep 450 | val_mse=0.291762
+    ep 500 | val_mse=0.291634
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=5,226 | pred_len=32 | ar_steps=1 | 评估窗口数=153
+    ✅ MSE=0.370392 | MAE=0.481639 (基于153个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.697510
+    ep   2 | val_mse=28.041139
+    ep   3 | val_mse=27.397574
+    ep  50 | val_mse=7.773774
+    ep 100 | val_mse=1.355709
+    ep 150 | val_mse=0.318004
+    ep 200 | val_mse=0.298312
+    ep 250 | val_mse=0.293434
+    ep 300 | val_mse=0.290224
+    ep 350 | val_mse=0.288230
+    ep 400 | val_mse=0.287211
+    ep 450 | val_mse=0.286747
+    ep 500 | val_mse=0.286625
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=5,226 | pred_len=32 | ar_steps=1 | 评估窗口数=153
+    ✅ MSE=0.341036 | MAE=0.468002 (基于153个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.354672
+    ep   2 | val_freq_mse=1.159511
+    ep   3 | val_freq_mse=1.042153
+    ep  30 | val_freq_mse=0.968070
+    ep  60 | val_freq_mse=0.936537
+    ep  90 | val_freq_mse=0.946533
+    ep 120 | val_freq_mse=0.925105
+    ep 150 | val_freq_mse=0.926159
+    [早停] ep=177 | best=0.920837
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=31.852243
+    ep   2 | val_mse=31.158263
+    ep   3 | val_mse=30.471278
+    ep  50 | val_mse=8.513219
+    ep 100 | val_mse=0.877441
+    ep 150 | val_mse=0.300946
+    ep 200 | val_mse=0.295110
+    ep 250 | val_mse=0.291382
+    ep 300 | val_mse=0.288566
+    ep 350 | val_mse=0.286899
+    ep 400 | val_mse=0.285997
+    ep 450 | val_mse=0.285588
+    ep 500 | val_mse=0.285496
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=5,226 | pred_len=32 | ar_steps=1 | 评估窗口数=153
+    ✅ MSE=0.330806 | MAE=0.459191 (基于153个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.716841
+    ep   2 | val_freq_mse=1.457152
+    ep   3 | val_freq_mse=1.174070
+    ep  30 | val_freq_mse=0.919353
+    ep  60 | val_freq_mse=0.919509
+    ep  90 | val_freq_mse=0.912789
+    ep 120 | val_freq_mse=0.910313
+    ep 150 | val_freq_mse=0.911235
+    [早停] ep=175 | best=0.907437
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=12.001690
+    ep   2 | val_mse=11.753132
+    ep   3 | val_mse=11.508204
+    ep  50 | val_mse=3.714582
+    ep 100 | val_mse=0.822901
+    ep 150 | val_mse=0.296209
+    ep 200 | val_mse=0.266594
+    ep 250 | val_mse=0.263957
+    ep 300 | val_mse=0.262435
+    ep 350 | val_mse=0.261442
+    ep 400 | val_mse=0.260978
+    ep 450 | val_mse=0.260741
+    ep 500 | val_mse=0.260680
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=5,226 | pred_len=32 | ar_steps=1 | 评估窗口数=153
+    ✅ MSE=0.298801 | MAE=0.436514 (基于153个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=9.75742 | lyap=0.00198 | val=9.59915 | ρ(K)=0.6931
+    ep   2 | pred=9.51973 | lyap=0.00198 | val=9.39305 | ρ(K)=0.6931
+    ep   3 | pred=9.31534 | lyap=0.00198 | val=9.18978 | ρ(K)=0.6931
+    ep  50 | pred=2.91686 | lyap=0.00198 | val=2.88493 | ρ(K)=0.6938
+    ep 100 | pred=0.64923 | lyap=0.00197 | val=0.63028 | ρ(K)=0.6954
+    ep 150 | pred=0.27125 | lyap=0.00197 | val=0.27001 | ρ(K)=0.6960
+    ep 200 | pred=0.26006 | lyap=0.00197 | val=0.26490 | ρ(K)=0.6961
+    ep 250 | pred=0.25819 | lyap=0.00197 | val=0.26265 | ρ(K)=0.6962
+    ep 300 | pred=0.25512 | lyap=0.00197 | val=0.26104 | ρ(K)=0.6963
+    ep 350 | pred=0.25614 | lyap=0.00197 | val=0.26001 | ρ(K)=0.6964
+    ep 400 | pred=0.26520 | lyap=0.00197 | val=0.25949 | ρ(K)=0.6964
+    ep 450 | pred=0.26046 | lyap=0.00197 | val=0.25927 | ρ(K)=0.6964
+    ep 500 | pred=0.25557 | lyap=0.00197 | val=0.25921 | ρ(K)=0.6964
+    ✅ 完成 | best_val=0.259211 | ρ(K)=0.696437 | σ∈[0.6868,0.7031]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=5,226 | pred_len=32 | ar_steps=1 | 评估窗口数=153
+    ✅ MSE=0.307786 | MAE=0.443746 (基于153个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTh2 | pred_len=32 (ar_steps=1) 消融结果:
+    A_Scratch            MSE=0.370392  MAE=0.481639  +8.6%
+    B_JEPA               MSE=0.341036  MAE=0.468002  (基准)
+    C_Direct             MSE=0.330806  MAE=0.459191  -3.0%
+    D_Decoupled          MSE=0.298801  MAE=0.436514  -12.4%
+    E_KoopProp           MSE=0.307786  MAE=0.443746  -9.7%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTh2 | pred_len=192 | ar_steps=6
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTh2 | pred_len=192 (ar_steps=6)
+  train=10,191 | val=1,132 | test可用步数=153 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=35.655023
+    ep   2 | val_mse=34.851096
+    ep   3 | val_mse=34.063624
+    ep  50 | val_mse=10.147346
+    ep 100 | val_mse=2.008473
+    ep 150 | val_mse=0.482827
+    ep 200 | val_mse=0.307980
+    ep 250 | val_mse=0.299841
+    ep 300 | val_mse=0.295883
+    ep 350 | val_mse=0.293487
+    ep 400 | val_mse=0.292291
+    ep 450 | val_mse=0.291762
+    ep 500 | val_mse=0.291634
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=5,226 | pred_len=192 | ar_steps=6 | 评估窗口数=25
+    ✅ MSE=0.447233 | MAE=0.532404 (基于25个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.697510
+    ep   2 | val_mse=28.041139
+    ep   3 | val_mse=27.397574
+    ep  50 | val_mse=7.773774
+    ep 100 | val_mse=1.355709
+    ep 150 | val_mse=0.318004
+    ep 200 | val_mse=0.298312
+    ep 250 | val_mse=0.293434
+    ep 300 | val_mse=0.290224
+    ep 350 | val_mse=0.288230
+    ep 400 | val_mse=0.287211
+    ep 450 | val_mse=0.286747
+    ep 500 | val_mse=0.286625
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=5,226 | pred_len=192 | ar_steps=6 | 评估窗口数=25
+    ✅ MSE=0.440816 | MAE=0.527348 (基于25个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.354672
+    ep   2 | val_freq_mse=1.159511
+    ep   3 | val_freq_mse=1.042153
+    ep  30 | val_freq_mse=0.968070
+    ep  60 | val_freq_mse=0.936537
+    ep  90 | val_freq_mse=0.946533
+    ep 120 | val_freq_mse=0.925105
+    ep 150 | val_freq_mse=0.926159
+    [早停] ep=177 | best=0.920837
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=31.852243
+    ep   2 | val_mse=31.158263
+    ep   3 | val_mse=30.471278
+    ep  50 | val_mse=8.513219
+    ep 100 | val_mse=0.877441
+    ep 150 | val_mse=0.300946
+    ep 200 | val_mse=0.295110
+    ep 250 | val_mse=0.291382
+    ep 300 | val_mse=0.288566
+    ep 350 | val_mse=0.286899
+    ep 400 | val_mse=0.285997
+    ep 450 | val_mse=0.285588
+    ep 500 | val_mse=0.285496
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=5,226 | pred_len=192 | ar_steps=6 | 评估窗口数=25
+    ✅ MSE=0.414601 | MAE=0.512402 (基于25个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.716841
+    ep   2 | val_freq_mse=1.457152
+    ep   3 | val_freq_mse=1.174070
+    ep  30 | val_freq_mse=0.919353
+    ep  60 | val_freq_mse=0.919509
+    ep  90 | val_freq_mse=0.912789
+    ep 120 | val_freq_mse=0.910313
+    ep 150 | val_freq_mse=0.911235
+    [早停] ep=175 | best=0.907437
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=12.001690
+    ep   2 | val_mse=11.753132
+    ep   3 | val_mse=11.508204
+    ep  50 | val_mse=3.714582
+    ep 100 | val_mse=0.822901
+    ep 150 | val_mse=0.296209
+    ep 200 | val_mse=0.266594
+    ep 250 | val_mse=0.263957
+    ep 300 | val_mse=0.262435
+    ep 350 | val_mse=0.261442
+    ep 400 | val_mse=0.260978
+    ep 450 | val_mse=0.260741
+    ep 500 | val_mse=0.260680
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=5,226 | pred_len=192 | ar_steps=6 | 评估窗口数=25
+    ✅ MSE=0.340328 | MAE=0.463429 (基于25个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=9.75742 | lyap=0.00198 | val=9.59915 | ρ(K)=0.6931
+    ep   2 | pred=9.51973 | lyap=0.00198 | val=9.39305 | ρ(K)=0.6931
+    ep   3 | pred=9.31534 | lyap=0.00198 | val=9.18978 | ρ(K)=0.6931
+    ep  50 | pred=2.91686 | lyap=0.00198 | val=2.88493 | ρ(K)=0.6938
+    ep 100 | pred=0.64923 | lyap=0.00197 | val=0.63028 | ρ(K)=0.6954
+    ep 150 | pred=0.27125 | lyap=0.00197 | val=0.27001 | ρ(K)=0.6960
+    ep 200 | pred=0.26006 | lyap=0.00197 | val=0.26490 | ρ(K)=0.6961
+    ep 250 | pred=0.25819 | lyap=0.00197 | val=0.26265 | ρ(K)=0.6962
+    ep 300 | pred=0.25512 | lyap=0.00197 | val=0.26104 | ρ(K)=0.6963
+    ep 350 | pred=0.25614 | lyap=0.00197 | val=0.26001 | ρ(K)=0.6964
+    ep 400 | pred=0.26520 | lyap=0.00197 | val=0.25949 | ρ(K)=0.6964
+    ep 450 | pred=0.26046 | lyap=0.00197 | val=0.25927 | ρ(K)=0.6964
+    ep 500 | pred=0.25557 | lyap=0.00197 | val=0.25921 | ρ(K)=0.6964
+    ✅ 完成 | best_val=0.259211 | ρ(K)=0.696437 | σ∈[0.6868,0.7031]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=5,226 | pred_len=192 | ar_steps=6 | 评估窗口数=25
+    ✅ MSE=0.346020 | MAE=0.467680 (基于25个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTh2 | pred_len=192 (ar_steps=6) 消融结果:
+    A_Scratch            MSE=0.447233  MAE=0.532404  +1.5%
+    B_JEPA               MSE=0.440816  MAE=0.527348  (基准)
+    C_Direct             MSE=0.414601  MAE=0.512402  -5.9%
+    D_Decoupled          MSE=0.340328  MAE=0.463429  -22.8%
+    E_KoopProp           MSE=0.346020  MAE=0.467680  -21.5%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTh2 | pred_len=336 | ar_steps=11
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTh2 | pred_len=336 (ar_steps=11)
+  train=10,191 | val=1,132 | test可用步数=153 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=35.655023
+    ep   2 | val_mse=34.851096
+    ep   3 | val_mse=34.063624
+    ep  50 | val_mse=10.147346
+    ep 100 | val_mse=2.008473
+    ep 150 | val_mse=0.482827
+    ep 200 | val_mse=0.307980
+    ep 250 | val_mse=0.299841
+    ep 300 | val_mse=0.295883
+    ep 350 | val_mse=0.293487
+    ep 400 | val_mse=0.292291
+    ep 450 | val_mse=0.291762
+    ep 500 | val_mse=0.291634
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=5,226 | pred_len=336 | ar_steps=11 | 评估窗口数=14
+    ✅ MSE=0.616889 | MAE=0.604153 (基于14个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.697510
+    ep   2 | val_mse=28.041139
+    ep   3 | val_mse=27.397574
+    ep  50 | val_mse=7.773774
+    ep 100 | val_mse=1.355709
+    ep 150 | val_mse=0.318004
+    ep 200 | val_mse=0.298312
+    ep 250 | val_mse=0.293434
+    ep 300 | val_mse=0.290224
+    ep 350 | val_mse=0.288230
+    ep 400 | val_mse=0.287211
+    ep 450 | val_mse=0.286747
+    ep 500 | val_mse=0.286625
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=5,226 | pred_len=336 | ar_steps=11 | 评估窗口数=14
+    ✅ MSE=0.643728 | MAE=0.614007 (基于14个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.354672
+    ep   2 | val_freq_mse=1.159511
+    ep   3 | val_freq_mse=1.042153
+    ep  30 | val_freq_mse=0.968070
+    ep  60 | val_freq_mse=0.936537
+    ep  90 | val_freq_mse=0.946533
+    ep 120 | val_freq_mse=0.925105
+    ep 150 | val_freq_mse=0.926159
+    [早停] ep=177 | best=0.920837
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=31.852243
+    ep   2 | val_mse=31.158263
+    ep   3 | val_mse=30.471278
+    ep  50 | val_mse=8.513219
+    ep 100 | val_mse=0.877441
+    ep 150 | val_mse=0.300946
+    ep 200 | val_mse=0.295110
+    ep 250 | val_mse=0.291382
+    ep 300 | val_mse=0.288566
+    ep 350 | val_mse=0.286899
+    ep 400 | val_mse=0.285997
+    ep 450 | val_mse=0.285588
+    ep 500 | val_mse=0.285496
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=5,226 | pred_len=336 | ar_steps=11 | 评估窗口数=14
+    ✅ MSE=0.624557 | MAE=0.603345 (基于14个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.716841
+    ep   2 | val_freq_mse=1.457152
+    ep   3 | val_freq_mse=1.174070
+    ep  30 | val_freq_mse=0.919353
+    ep  60 | val_freq_mse=0.919509
+    ep  90 | val_freq_mse=0.912789
+    ep 120 | val_freq_mse=0.910313
+    ep 150 | val_freq_mse=0.911235
+    [早停] ep=175 | best=0.907437
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=12.001690
+    ep   2 | val_mse=11.753132
+    ep   3 | val_mse=11.508204
+    ep  50 | val_mse=3.714582
+    ep 100 | val_mse=0.822901
+    ep 150 | val_mse=0.296209
+    ep 200 | val_mse=0.266594
+    ep 250 | val_mse=0.263957
+    ep 300 | val_mse=0.262435
+    ep 350 | val_mse=0.261442
+    ep 400 | val_mse=0.260978
+    ep 450 | val_mse=0.260741
+    ep 500 | val_mse=0.260680
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=5,226 | pred_len=336 | ar_steps=11 | 评估窗口数=14
+    ✅ MSE=0.339021 | MAE=0.461468 (基于14个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=9.75742 | lyap=0.00198 | val=9.59915 | ρ(K)=0.6931
+    ep   2 | pred=9.51973 | lyap=0.00198 | val=9.39305 | ρ(K)=0.6931
+    ep   3 | pred=9.31534 | lyap=0.00198 | val=9.18978 | ρ(K)=0.6931
+    ep  50 | pred=2.91686 | lyap=0.00198 | val=2.88493 | ρ(K)=0.6938
+    ep 100 | pred=0.64923 | lyap=0.00197 | val=0.63028 | ρ(K)=0.6954
+    ep 150 | pred=0.27125 | lyap=0.00197 | val=0.27001 | ρ(K)=0.6960
+    ep 200 | pred=0.26006 | lyap=0.00197 | val=0.26490 | ρ(K)=0.6961
+    ep 250 | pred=0.25819 | lyap=0.00197 | val=0.26265 | ρ(K)=0.6962
+    ep 300 | pred=0.25512 | lyap=0.00197 | val=0.26104 | ρ(K)=0.6963
+    ep 350 | pred=0.25614 | lyap=0.00197 | val=0.26001 | ρ(K)=0.6964
+    ep 400 | pred=0.26520 | lyap=0.00197 | val=0.25949 | ρ(K)=0.6964
+    ep 450 | pred=0.26046 | lyap=0.00197 | val=0.25927 | ρ(K)=0.6964
+    ep 500 | pred=0.25557 | lyap=0.00197 | val=0.25921 | ρ(K)=0.6964
+    ✅ 完成 | best_val=0.259211 | ρ(K)=0.696437 | σ∈[0.6868,0.7031]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=5,226 | pred_len=336 | ar_steps=11 | 评估窗口数=14
+    ✅ MSE=0.341329 | MAE=0.462713 (基于14个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTh2 | pred_len=336 (ar_steps=11) 消融结果:
+    A_Scratch            MSE=0.616889  MAE=0.604153  -4.2%
+    B_JEPA               MSE=0.643728  MAE=0.614007  (基准)
+    C_Direct             MSE=0.624557  MAE=0.603345  -3.0%
+    D_Decoupled          MSE=0.339021  MAE=0.461468  -47.3%
+    E_KoopProp           MSE=0.341329  MAE=0.462713  -47.0%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTh2 | pred_len=720 | ar_steps=23
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTh2 | pred_len=720 (ar_steps=23)
+  train=10,191 | val=1,132 | test可用步数=153 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=35.655023
+    ep   2 | val_mse=34.851096
+    ep   3 | val_mse=34.063624
+    ep  50 | val_mse=10.147346
+    ep 100 | val_mse=2.008473
+    ep 150 | val_mse=0.482827
+    ep 200 | val_mse=0.307980
+    ep 250 | val_mse=0.299841
+    ep 300 | val_mse=0.295883
+    ep 350 | val_mse=0.293487
+    ep 400 | val_mse=0.292291
+    ep 450 | val_mse=0.291762
+    ep 500 | val_mse=0.291634
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=5,226 | pred_len=720 | ar_steps=23 | 评估窗口数=6
+    ✅ MSE=3.440091 | MAE=1.247960 (基于6个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=28.697510
+    ep   2 | val_mse=28.041139
+    ep   3 | val_mse=27.397574
+    ep  50 | val_mse=7.773774
+    ep 100 | val_mse=1.355709
+    ep 150 | val_mse=0.318004
+    ep 200 | val_mse=0.298312
+    ep 250 | val_mse=0.293434
+    ep 300 | val_mse=0.290224
+    ep 350 | val_mse=0.288230
+    ep 400 | val_mse=0.287211
+    ep 450 | val_mse=0.286747
+    ep 500 | val_mse=0.286625
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=5,226 | pred_len=720 | ar_steps=23 | 评估窗口数=6
+    ✅ MSE=5.421387 | MAE=1.539390 (基于6个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.354672
+    ep   2 | val_freq_mse=1.159511
+    ep   3 | val_freq_mse=1.042153
+    ep  30 | val_freq_mse=0.968070
+    ep  60 | val_freq_mse=0.936537
+    ep  90 | val_freq_mse=0.946533
+    ep 120 | val_freq_mse=0.925105
+    ep 150 | val_freq_mse=0.926159
+    [早停] ep=177 | best=0.920837
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=31.852243
+    ep   2 | val_mse=31.158263
+    ep   3 | val_mse=30.471278
+    ep  50 | val_mse=8.513219
+    ep 100 | val_mse=0.877441
+    ep 150 | val_mse=0.300946
+    ep 200 | val_mse=0.295110
+    ep 250 | val_mse=0.291382
+    ep 300 | val_mse=0.288566
+    ep 350 | val_mse=0.286899
+    ep 400 | val_mse=0.285997
+    ep 450 | val_mse=0.285588
+    ep 500 | val_mse=0.285496
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=5,226 | pred_len=720 | ar_steps=23 | 评估窗口数=6
+    ✅ MSE=5.704931 | MAE=1.613721 (基于6个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.716841
+    ep   2 | val_freq_mse=1.457152
+    ep   3 | val_freq_mse=1.174070
+    ep  30 | val_freq_mse=0.919353
+    ep  60 | val_freq_mse=0.919509
+    ep  90 | val_freq_mse=0.912789
+    ep 120 | val_freq_mse=0.910313
+    ep 150 | val_freq_mse=0.911235
+    [早停] ep=175 | best=0.907437
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=12.001690
+    ep   2 | val_mse=11.753132
+    ep   3 | val_mse=11.508204
+    ep  50 | val_mse=3.714582
+    ep 100 | val_mse=0.822901
+    ep 150 | val_mse=0.296209
+    ep 200 | val_mse=0.266594
+    ep 250 | val_mse=0.263957
+    ep 300 | val_mse=0.262435
+    ep 350 | val_mse=0.261442
+    ep 400 | val_mse=0.260978
+    ep 450 | val_mse=0.260741
+    ep 500 | val_mse=0.260680
+
+  ── 自回归滚动测试: D_Decoupled ──
+    test_df长度=5,226 | pred_len=720 | ar_steps=23 | 评估窗口数=6
+    ✅ MSE=0.498262 | MAE=0.543508 (基于6个窗口)
+
+=================================================================
+【E_KoopProp】
+
+  ── 训练 E_KoopProp ──
+    ep   1 | pred=9.75742 | lyap=0.00198 | val=9.59915 | ρ(K)=0.6931
+    ep   2 | pred=9.51973 | lyap=0.00198 | val=9.39305 | ρ(K)=0.6931
+    ep   3 | pred=9.31534 | lyap=0.00198 | val=9.18978 | ρ(K)=0.6931
+    ep  50 | pred=2.91686 | lyap=0.00198 | val=2.88493 | ρ(K)=0.6938
+    ep 100 | pred=0.64923 | lyap=0.00197 | val=0.63028 | ρ(K)=0.6954
+    ep 150 | pred=0.27125 | lyap=0.00197 | val=0.27001 | ρ(K)=0.6960
+    ep 200 | pred=0.26006 | lyap=0.00197 | val=0.26490 | ρ(K)=0.6961
+    ep 250 | pred=0.25819 | lyap=0.00197 | val=0.26265 | ρ(K)=0.6962
+    ep 300 | pred=0.25512 | lyap=0.00197 | val=0.26104 | ρ(K)=0.6963
+    ep 350 | pred=0.25614 | lyap=0.00197 | val=0.26001 | ρ(K)=0.6964
+    ep 400 | pred=0.26520 | lyap=0.00197 | val=0.25949 | ρ(K)=0.6964
+    ep 450 | pred=0.26046 | lyap=0.00197 | val=0.25927 | ρ(K)=0.6964
+    ep 500 | pred=0.25557 | lyap=0.00197 | val=0.25921 | ρ(K)=0.6964
+    ✅ 完成 | best_val=0.259211 | ρ(K)=0.696437 | σ∈[0.6868,0.7031]
+
+  ── 自回归滚动测试: E_KoopProp ──
+    test_df长度=5,226 | pred_len=720 | ar_steps=23 | 评估窗口数=6
+    ✅ MSE=0.399609 | MAE=0.500096 (基于6个窗口)
+
+─────────────────────────────────────────────────────────────────
+  ETTh2 | pred_len=720 (ar_steps=23) 消融结果:
+    A_Scratch            MSE=3.440091  MAE=1.247960  -36.5%
+    B_JEPA               MSE=5.421387  MAE=1.539390  (基准)
+    C_Direct             MSE=5.704931  MAE=1.613721  +5.2%
+    D_Decoupled          MSE=0.498262  MAE=0.543508  -90.8%
+    E_KoopProp           MSE=0.399609  MAE=0.500096  -92.6%
+─────────────────────────────────────────────────────────────────
+
+██████████████████████████████████████████████████████████████████████
+█  dataset=ETTm2 | pred_len=96 | ar_steps=3
+██████████████████████████████████████████████████████████████████████
+
+[数据] dataset=ETTm2 | pred_len=96 (ar_steps=3)
+  train=40,763 | val=4,529 | test可用步数=643 (每步预测32点)
+
+[加载] lr_1e-07_ema_momentum_0.998_mask_ratio_0.7_ratio_patches_10_encoder_128_2_1_predictor_128_2_1_epoch_5000.pt
+  ✅ 加载成功 | epoch=5000 | 参数量=364,288
+  ✅ encoder输出: patch_repr=(2, 10, 128), mean=-0.0009, std=7.8360
+
+=================================================================
+【A_Scratch】
+
+  ── 训练预测头: A_Scratch ──
+    ep   1 | val_mse=33.454809
+    ep   2 | val_mse=30.311544
+    ep   3 | val_mse=27.408478
+    ep  50 | val_mse=0.248120
+    ep 100 | val_mse=0.218684
+    ep 150 | val_mse=0.203338
+    ep 200 | val_mse=0.193949
+    ep 250 | val_mse=0.188179
+    ep 300 | val_mse=0.184415
+    ep 350 | val_mse=0.182226
+    ep 400 | val_mse=0.181106
+    ep 450 | val_mse=0.180636
+    ep 500 | val_mse=0.180497
+
+  ── 自回归滚动测试: A_Scratch ──
+    test_df长度=20,904 | pred_len=96 | ar_steps=3 | 评估窗口数=214
+    ✅ MSE=0.244986 | MAE=0.383967 (基于214个窗口)
+
+=================================================================
+【B_JEPA】
+
+  ── 训练预测头: B_JEPA ──
+    ep   1 | val_mse=27.046591
+    ep   2 | val_mse=24.422445
+    ep   3 | val_mse=21.990222
+    ep  50 | val_mse=0.226479
+    ep 100 | val_mse=0.209591
+    ep 150 | val_mse=0.198658
+    ep 200 | val_mse=0.191415
+    ep 250 | val_mse=0.186882
+    ep 300 | val_mse=0.183825
+    ep 350 | val_mse=0.182078
+    ep 400 | val_mse=0.181139
+    ep 450 | val_mse=0.180765
+    ep 500 | val_mse=0.180661
+
+  ── 自回归滚动测试: B_JEPA ──
+    test_df长度=20,904 | pred_len=96 | ar_steps=3 | 评估窗口数=214
+    ✅ MSE=0.246776 | MAE=0.387126 (基于214个窗口)
+
+=================================================================
+【C_Direct】
+
+  [频率模块微调] C_Direct
+    ep   1 | val_freq_mse=1.152651
+    ep   2 | val_freq_mse=1.003824
+    ep   3 | val_freq_mse=1.002543
+    ep  30 | val_freq_mse=0.999794
+    ep  60 | val_freq_mse=0.995864
+    ep  90 | val_freq_mse=0.977149
+    ep 120 | val_freq_mse=0.986273
+    [早停] ep=121 | best=0.971750
+
+  ── 训练预测头: C_Direct ──
+    ep   1 | val_mse=27.215296
+    ep   2 | val_mse=24.882912
+    ep   3 | val_mse=22.719907
+    ep  50 | val_mse=0.219050
+    ep 100 | val_mse=0.204416
+    ep 150 | val_mse=0.195069
+    ep 200 | val_mse=0.188756
+    ep 250 | val_mse=0.184623
+    ep 300 | val_mse=0.182036
+    ep 350 | val_mse=0.180516
+    ep 400 | val_mse=0.179685
+    ep 450 | val_mse=0.179353
+    ep 500 | val_mse=0.179264
+
+  ── 自回归滚动测试: C_Direct ──
+    test_df长度=20,904 | pred_len=96 | ar_steps=3 | 评估窗口数=214
+    ✅ MSE=0.241111 | MAE=0.381435 (基于214个窗口)
+
+=================================================================
+【D_Decoupled】
+
+  [频率模块微调] D_Decoupled
+    ep   1 | val_freq_mse=1.027714
+    ep   2 | val_freq_mse=1.034887
+    ep   3 | val_freq_mse=1.030601
+    ep  30 | val_freq_mse=1.029963
+    [早停] ep=38 | best=1.017926
+
+  ── 训练预测头: D_Decoupled ──
+    ep   1 | val_mse=9.140386
+    ep   2 | val_mse=8.372963
+    ep   3 | val_mse=7.652245
+    ep  50 | val_mse=0.215329
+    ep 100 | val_mse=0.206697
+    ep 150 | val_mse=0.200335

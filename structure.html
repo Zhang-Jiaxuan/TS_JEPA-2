@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e0e0e0; margin: 0; padding: 20px; }
+  h2 { text-align: center; color: #7eb8f7; margin-bottom: 4px; font-size: 18px; }
+  .subtitle { text-align: center; color: #888; font-size: 12px; margin-bottom: 20px; }
+  .stage { border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+  .stage-pretrain { background: #1a1f2e; border: 1.5px solid #3a5a9a; }
+  .stage-eval { background: #1a2a1a; border: 1.5px solid #3a8a3a; }
+  .stage-title { font-size: 14px; font-weight: bold; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .tag { padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+  .tag-pre { background: #3a5a9a; color: #fff; }
+  .tag-eval { background: #3a8a3a; color: #fff; }
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+  .box { border-radius: 8px; padding: 8px 12px; font-size: 12px; text-align: center; min-width: 90px; }
+  .box-data { background: #2a2a4a; border: 1px solid #5a5aaa; color: #aac0ff; }
+  .box-enc { background: #2a3a5a; border: 1px solid #5a8aff; color: #8ab8ff; }
+  .box-enc-frozen { background: #1e2e3e; border: 1.5px dashed #5a8aff; color: #6a9adf; }
+  .box-enc-ema { background: #2a2a5a; border: 1.5px solid #9a7aff; color: #c0a8ff; }
+  .box-pred { background: #3a2a4a; border: 1px solid #aa7aff; color: #d0a8ff; }
+  .box-dec { background: #2a4a2a; border: 1px solid #5aaa5a; color: #8adc8a; }
+  .box-loss { background: #4a2a2a; border: 1px solid #aa5a5a; color: #ffaaaa; }
+  .box-op { background: #3a3a2a; border: 1px solid #aaaa5a; color: #ffffa0; }
+  .box-out { background: #2a4a4a; border: 1px solid #5aaaaa; color: #8affff; }
+  .arrow { color: #666; font-size: 18px; padding: 0 2px; }
+  .arrow-down { display: flex; justify-content: center; color: #555; font-size: 20px; margin: 4px 0; }
+  .label { font-size: 10px; color: #888; margin-top: 3px; }
+  .section { margin: 8px 0; }
+  .row { display: flex; align-items: flex-start; gap: 12px; margin: 8px 0; }
+  .col { display: flex; flex-direction: column; align-items: center; }
+  .divider { border: none; border-top: 1px dashed #444; margin: 12px 0; }
+  .note { background: #252525; border-left: 3px solid #f0a050; padding: 8px 12px; border-radius: 4px; font-size: 11px; color: #ccc; margin: 8px 0; }
+  .ema-note { background: #252535; border-left: 3px solid #9a7aff; padding: 8px 12px; border-radius: 4px; font-size: 11px; color: #ccc; margin: 8px 0; }
+  .highlight { color: #f0c060; font-weight: bold; }
+  .green { color: #6adc6a; }
+  .blue { color: #6ab8ff; }
+  .purple { color: #c0a8ff; }
+  .red { color: #ffaaaa; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .branch { border-radius: 8px; padding: 10px; }
+  .branch-ctx { background: #1e2e3e; border: 1px solid #4a7aaa; }
+  .branch-tgt { background: #1e1e3e; border: 1px solid #6a5aaa; }
+  .branch-title { font-size: 11px; font-weight: bold; margin-bottom: 6px; }
+  .dim-label { font-size: 10px; color: #f0a050; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<h2>TS-JEPA 完整架构：预训练 → 下游预测</h2>
+<p class="subtitle">基于 Weather 数据集 · ratio_patches=10 · patch_size=32 · embed_dim=128</p>
+
+<!-- ===== STAGE 1: INPUT ===== -->
+<div class="stage stage-pretrain">
+  <div class="stage-title">
+    <span class="tag tag-pre">STEP 0</span>
+    <span>输入处理：时间序列 → Patches</span>
+  </div>
+  <div class="flow">
+    <div class="col">
+      <div class="box box-data">Weather CSV<br><span class="label">原始时间序列</span></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-op">Sliding Window<br><span class="label">滑动切片</span></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-data">[B, 10, 32]<br><span class="label">10个patch，每个长32</span></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-op">Random Mask<br><span class="label">mask_ratio=0.7</span></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-data" style="background:#2a3a2a;border-color:#5a8a5a;color:#8acc8a">non_masks [B,3]<br><span class="label">3个context patch索引</span></div>
+    </div>
+    <div class="arrow">+</div>
+    <div class="col">
+      <div class="box box-data" style="background:#3a2a3a;border-color:#8a5a8a;color:#cc8acc">masks [B,7]<br><span class="label">7个target patch索引</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STAGE 2: PRETRAIN ===== -->
+<div class="stage stage-pretrain">
+  <div class="stage-title">
+    <span class="tag tag-pre">STAGE 1</span>
+    <span>预训练阶段（pretrain.py）— 5001 epochs</span>
+  </div>
+
+  <div class="two-col">
+    <!-- Context Branch -->
+    <div class="branch branch-ctx">
+      <div class="branch-title blue">🔵 Context 分支（在线，有梯度）</div>
+      <div class="flow" style="flex-direction:column;align-items:flex-start;gap:6px;">
+        <div class="box box-data" style="width:100%">输入：全部10个patch [B,10,32]</div>
+        <div class="arrow-down">↓</div>
+        <div class="box box-enc" style="width:100%">
+          <b>Context Encoder</b><br>
+          <span class="label">TS_Tokenizer: Conv1D(k=3)+Linear → [B,10,128]</span><br>
+          <span class="label">+ Sin-Cos 位置编码</span><br>
+          <span class="label">→ apply_mask(non_masks)：只保留3个patch</span><br>
+          <span class="label">→ TransformerBlock×1 (nhead=2)</span><br>
+          <span class="label">→ LayerNorm</span>
+        </div>
+        <div class="dim-label">输出: [B, 3, 128]</div>
+        <div class="arrow-down">↓</div>
+        <div class="box box-pred" style="width:100%">
+          <b>Predictor</b><br>
+          <span class="label">Linear(128→128)</span><br>
+          <span class="label">+ context位置编码(3个位置)</span><br>
+          <span class="label">+ mask_token×7 + target位置编码(7个位置)</span><br>
+          <span class="label">→ concat → [B, 10, 128]</span><br>
+          <span class="label">→ TransformerBlock×1 (nhead=2)</span><br>
+          <span class="label">→ LayerNorm → 取后7个 → Linear(128→128)</span>
+        </div>
+        <div class="dim-label">输出: [B, 7, 128] ← 预测值</div>
+      </div>
+    </div>
+
+    <!-- Target Branch -->
+    <div class="branch branch-tgt">
+      <div class="branch-title purple">🟣 Target 分支（EMA，stop-gradient）</div>
+      <div class="flow" style="flex-direction:column;align-items:flex-start;gap:6px;">
+        <div class="box box-data" style="width:100%">输入：全部10个patch [B,10,32]</div>
+        <div class="arrow-down">↓</div>
+        <div class="box box-enc-ema" style="width:100%">
+          <b>Target Encoder（EMA副本）</b><br>
+          <span class="label">结构与Context Encoder完全相同</span><br>
+          <span class="label">⚠️ 不做 mask，处理全部10个patch</span><br>
+          <span class="label">→ TransformerBlock×1</span><br>
+          <span class="label">→ LayerNorm</span>
+        </div>
+        <div class="dim-label">输出: [B, 10, 128]</div>
+        <div class="arrow-down">↓</div>
+        <div class="box box-op" style="width:100%">
+          F.layer_norm( · )<br>
+          <span class="label">防止表征坍缩</span>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="box box-op" style="width:100%">
+          apply_mask(masks)<br>
+          <span class="label">只取7个masked位置</span>
+        </div>
+        <div class="dim-label">输出: [B, 7, 128] ← 目标值（答案）</div>
+        <div class="arrow-down">↓</div>
+        <div class="box box-op" style="background:#252535;border-color:#9a7aff;width:100%">
+          <b>EMA 更新</b><br>
+          <span class="label">param_k = m × param_k + (1-m) × param_q</span><br>
+          <span class="label">m: 0.998 → 0.9996（线性调度）</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+  <div class="flow" style="justify-content:center;">
+    <div class="box box-loss">
+      Loss = L1(预测[B,7,128], 目标[B,7,128])<br>
+      <span class="label">只更新 Context Encoder + Predictor</span>
+    </div>
+  </div>
+
+  <div class="ema-note" style="margin-top:10px;">
+    💾 每5000 epoch保存一次 <b>Context Encoder</b> 的权重（不保存Predictor和Target Encoder）
+  </div>
+</div>
+
+<!-- ===== STAGE 3: EVAL ===== -->
+<div class="stage stage-eval">
+  <div class="stage-title">
+    <span class="tag tag-eval">STAGE 2</span>
+    <span>下游评估阶段（eval_forecast_last_pred.py）— 500 epochs 微调</span>
+  </div>
+
+  <div class="note">
+    ⚠️ <b>只加载 Context Encoder 权重，Predictor 被丢弃</b>。新增一个 LinearDecoder 从零训练。
+  </div>
+
+  <!-- Finetune -->
+  <div style="margin-bottom:8px;font-size:12px;color:#aaa;">📌 微调阶段（训练集）：</div>
+  <div class="flow">
+    <div class="col">
+      <div class="box box-data">[B, 10, 32]<br><span class="label">context patches</span></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-enc-frozen">
+        <b>Encoder（冻结）</b><br>
+        <span class="label">加载预训练权重</span><br>
+        <span class="label">encoder.eval()</span><br>
+        <span class="label">⚠️ 此时mask=None</span><br>
+        <span class="label">处理全部10个patch</span>
+      </div>
+      <div class="dim-label">[B, 10, 128]</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-op">
+        torch.sum(dim=1)<br>
+        <span class="label">10个patch求和</span>
+      </div>
+      <div class="dim-label">[B, 128]</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-dec">
+        <b>LinearDecoder</b><br>
+        <span class="label">Linear(128→32)</span><br>
+        <span class="label">可训练 ✅</span>
+      </div>
+      <div class="dim-label">[B, 32]</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-loss">MSE Loss<br><span class="label">vs 真实下一个patch</span></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Test -->
+  <div style="margin-bottom:8px;font-size:12px;color:#aaa;">📌 测试阶段（滑动窗口推理）：</div>
+  <div class="flow">
+    <div class="col">
+      <div class="box box-data">测试集时间序列<br><span class="label">滑动窗口步长=32</span></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-enc-frozen">冻结 Encoder</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-op">sum → [B,128]</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-dec">LinearDecoder</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box box-out">MSE / MAE<br><span class="label">最终评估指标</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== KEY INSIGHT ===== -->
+<div style="background:#1a1a1a;border:1px solid #555;border-radius:10px;padding:16px;margin-top:4px;">
+  <div style="font-size:13px;font-weight:bold;color:#f0c060;margin-bottom:10px;">💡 预训练对下游预测的作用机制</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;font-size:11px;">
+    <div style="background:#252525;padding:10px;border-radius:8px;border-left:3px solid #5a8aff;">
+      <b class="blue">预训练学到了什么？</b><br><br>
+      用3个可见patch预测7个masked patch的<b>潜空间表征</b><br><br>
+      → Encoder 被迫学习时间序列的<b>局部结构</b>和<b>跨patch依赖</b>
+    </div>
+    <div style="background:#252525;padding:10px;border-radius:8px;border-left:3px solid #5aaa5a;">
+      <b class="green">下游如何利用？</b><br><br>
+      冻结Encoder，只训练一个Linear层<br><br>
+      → 如果Encoder表征质量高，Linear层就能轻松预测下一个patch<br>
+      → 这是一个<b>线性探针（Linear Probing）</b>测试
+    </div>
+    <div style="background:#252525;padding:10px;border-radius:8px;border-left:3px solid #f0a050;">
+      <b style="color:#f0a050;">EMA动量的影响路径</b><br><br>
+      m_init → 目标表征质量<br>
+      → Encoder 学到的特征分布<br>
+      → sum pooling 后的向量质量<br>
+      → <b>Linear层的可预测性</b><br>
+      → 最终 MSE/MAE
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
